@@ -1,0 +1,649 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.OrderDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Order">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="address" property="address" />
+        <result column="amount" property="amount" />
+        <result column="amount_paid" property="amountPaid" />
+        <result column="area_name" property="areaName" />
+        <result column="complete_date" property="completeDate" />
+        <result column="consignee" property="consignee" />
+
+        <result column="exchange_point" property="exchangePoint" />
+        <result column="expire" property="expire" />
+        <result column="fee" property="fee" />
+        <result column="freight" property="freight" />
+        <result column="is_allocated_stock" property="isAllocatedStock" />
+        <result column="is_exchange_point" property="isExchangePoint" />
+        <result column="is_reviewed" property="isReviewed" />
+
+        <result column="memo" property="memo" />
+        <result column="offset_amount" property="offsetAmount" />
+        <result column="payment_method_name" property="paymentMethodName" />
+        <result column="payment_method_type" property="paymentMethodType" />
+        <result column="phone" property="phone" />
+        <result column="price" property="price" />
+
+		<result column="invoice_content" property="invoice.content" />
+		<result column="invoice_tax_number" property="invoice.taxNumber" />
+		<result column="invoice_title" property="invoice.title" />
+        <result column="promotion_names" property="promotionNames" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.PromotionNameConverter"/>
+        <result column="quantity" property="quantity" />
+        <result column="refund_amount" property="refundAmount" />
+        <result column="returned_quantity" property="returnedQuantity" />
+        <result column="reward_point" property="rewardPoint" />
+        <result column="shipped_quantity" property="shippedQuantity" />
+        <result column="shipping_method_name" property="shippingMethodName" />
+        <result column="sn" property="sn" />
+        <result column="status" property="status" />
+        <result column="tax" property="tax" />
+        <result column="type" property="type" />
+        <result column="weight" property="weight" />
+        <result column="zip_code" property="zipCode" />
+		<result column="erp_sync" property="erpSync" />
+		<result column="erp_sync_time" property="erpSyncTime" />
+		<result column="member_id" property="memberId" />
+		<result column="is_export" property="isExport" />
+		<result column="export_date" property="exportDate" />
+		<result column="data_source" property="dataSource" />
+       	<association property="area" select="net.xiaoxiangshop.dao.AreaDao.find" column="area_id" javaType="net.xiaoxiangshop.entity.Area" fetchType="lazy"/>
+       	<association property="paymentMethod" select="net.xiaoxiangshop.dao.PaymentMethodDao.find" column="payment_method_id" javaType="net.xiaoxiangshop.entity.PaymentMethod" fetchType="lazy"/>
+       	<association property="shippingMethod" select="net.xiaoxiangshop.dao.ShippingMethodDao.find" column="shipping_method_id" javaType="net.xiaoxiangshop.entity.ShippingMethod" fetchType="lazy"/>
+       	<association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+
+        <collection property="orderItems" select="net.xiaoxiangshop.dao.OrderItemDao.findSet" column="{attributeName=orders, attributeValue=id}" ofType="net.xiaoxiangshop.entity.OrderItem" fetchType="lazy"/>
+        <collection property="paymentTransactions" select="net.xiaoxiangshop.dao.PaymentTransactionDao.findSet" column="{attributeName=orders, attributeValue=id}" ofType="net.xiaoxiangshop.entity.PaymentTransaction" fetchType="lazy"/>
+        <collection property="orderPayments" select="net.xiaoxiangshop.dao.OrderPaymentDao.findSet" column="{attributeName=orders, attributeValue=id}" ofType="net.xiaoxiangshop.entity.OrderPayment" fetchType="lazy"/>
+        <collection property="orderRefunds" select="net.xiaoxiangshop.dao.OrderRefundsDao.findSet" column="{attributeName=orders, attributeValue=id}" ofType="net.xiaoxiangshop.entity.OrderRefunds" fetchType="lazy"/>
+        <collection property="orderShippings" select="net.xiaoxiangshop.dao.OrderShippingDao.findSet" column="{attributeName=orders, attributeValue=id}" ofType="net.xiaoxiangshop.entity.OrderShipping" fetchType="lazy"/>
+        <collection property="orderReturns" select="net.xiaoxiangshop.dao.OrderReturnsDao.findSet" column="{attributeName=orders, attributeValue=id}" ofType="net.xiaoxiangshop.entity.OrderReturns" fetchType="lazy"/>
+        <collection property="distributionCommissions" select="net.xiaoxiangshop.dao.DistributionCommissionDao.findSet" column="{attributeName=orders, attributeValue=id}" ofType="net.xiaoxiangshop.entity.DistributionCommission" fetchType="lazy"/>
+        <collection property="orderLogs" select="net.xiaoxiangshop.dao.OrderLogDao.findSet" column="{attributeName=orders, attributeValue=id}" ofType="net.xiaoxiangshop.entity.OrderLog" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date,erp_sync,erp_sync_time, last_modified_date, address, amount, amount_paid, area_name, complete_date, consignee, exchange_point, expire, fee, freight, invoice_content, invoice_tax_number, invoice_title, is_allocated_stock, is_exchange_point, is_reviewed, memo, offset_amount, payment_method_name, payment_method_type, phone, price, quantity, refund_amount, returned_quantity, reward_point, shipped_quantity, shipping_method_name, sn, status, tax, type, weight, zip_code, area_id, member_id, payment_method_id,
+        shipping_method_id, store_id,is_export,export_date, 'orders',data_source
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM 
+			`orders`
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 根据属性查找实体对象 -->
+	<select id="findByAttribute" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`orders`
+		WHERE
+			${attributeName } = #{attributeValue}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`orders`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`orders`
+		<choose>
+
+			<otherwise>
+	  			WHERE
+					${attributeName} = #{attributeValue}
+	  		</otherwise>
+		</choose>
+	</select>
+	
+	<!-- 查询订单数量 -->
+	<select id="count" resultType="long">
+		SELECT
+			count(*)
+		FROM 
+			`orders` o
+		WHERE
+			1 = 1
+		<if test="type != null">
+			AND type = #{type.ordinal}
+		</if>
+		<if test="status != null" >
+			AND `status` = #{status.ordinal}
+		</if>
+		<if test="store != null">
+			AND store_id = #{store.id}
+		</if>
+		<if test="member != null">
+			AND member_id = #{member.id}
+		</if>
+		<if test="product != null">
+			AND EXISTS (SELECT orderitem.id FROM `order_item` orderitem WHERE orderitem.orders = orders.id AND orderitem.sku_id IN (SELECT sku.id FROM `sku` sku WHERE sku.product_id = #{product.id}))
+		</if>
+		<if test="isPendingReceive != null">
+			<if test="isPendingReceive == true">
+				AND (expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+				AND payment_method_type = 1
+				AND status <![CDATA[ <> ]]> 5
+				AND status <![CDATA[ <> ]]> 6
+				AND status <![CDATA[ <> ]]> 7
+				AND status <![CDATA[ <> ]]> 8
+				AND amount_paid <![CDATA[ < ]]> amount 
+			</if>
+			<if test="isPendingReceive == false">
+				AND((expire IS NOT NULL)
+					AND expire <![CDATA[ <= ]]> NOW()
+					OR payment_method_type <![CDATA[ <> ]]> 1
+					OR status <![CDATA[ = ]]> 5
+					OR status <![CDATA[ = ]]> 6
+					OR status <![CDATA[ = ]]> 7
+					OR status <![CDATA[ = ]]> 8
+					OR amount_paid <![CDATA[ >= ]]> amount
+				)
+			</if>
+		</if>
+		<if test="isPendingRefunds != null">
+			<if test="isPendingRefunds == true">
+				AND((
+					(expire IS NOT NULL)
+					AND expire <![CDATA[ <= ]]> NOW()
+					OR status <![CDATA[ = ]]> 6
+					OR status <![CDATA[ = ]]> 7
+					OR status <![CDATA[ = ]]> 8)
+					AND amount_paid <![CDATA[ > ]]> 0
+					OR status <![CDATA[ = ]]> 5
+					AND amount_paid <![CDATA[ > ]]> amount
+				)
+			</if>
+			<if test="isPendingRefunds == false">
+				AND((expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+					AND status <![CDATA[ <> ]]> 6
+					AND status <![CDATA[ <> ]]> 7
+					AND status <![CDATA[ <> ]]> 8
+					OR amount_paid <![CDATA[ <= ]]> 0)
+				AND( status <![CDATA[ <> ]]> 5 OR amount_paid <![CDATA[ <= ]]> amount)
+			</if>
+		</if>
+
+		<if test="isExchangePoint != null">
+			AND is_exchange_point = #{isExchangePoint}
+		</if>
+		<if test="isAllocatedStock != null">
+			AND is_allocated_stock = #{isAllocatedStock}
+		</if>
+		<if test="hasExpired != null">
+			<if test="hasExpired == true">
+				 AND expire IS NOT NULL AND expire <![CDATA[ <= ]]> NOW()
+			</if>
+			<if test="hasExpired == false">
+				AND (expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+			</if>
+		</if>
+	</select>
+	
+	<!-- 查找分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`orders` orders
+		WHERE
+			1 = 1
+		<if test="type != null">
+			AND type = #{type.ordinal}
+		</if>
+		<if test="status != null" >
+			AND `status` = #{status.ordinal}
+		</if>
+		<if test="store != null">
+			AND store_id = #{store.id}
+		</if>
+		<if test="member != null">
+			AND member_id = #{member.id}
+		</if>
+
+		<if test="product != null">
+			AND EXISTS (SELECT orderitem.id FROM `order_item` orderitem WHERE orderitem.orders = orders.id AND orderitem.sku_id IN (SELECT sku.id FROM `sku` sku WHERE sku.product_id = #{product.id}))
+		</if>
+		<if test="isPendingReceive != null">
+			<if test="isPendingReceive == true">
+				AND (expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+				AND payment_method_type = 1
+				AND status <![CDATA[ <> ]]> 5
+				AND status <![CDATA[ <> ]]> 6
+				AND status <![CDATA[ <> ]]> 7
+				AND status <![CDATA[ <> ]]> 8
+				AND amount_paid <![CDATA[ < ]]> amount 
+			</if>
+			<if test="isPendingReceive == false">
+				AND((expire IS NOT NULL)
+					AND expire <![CDATA[ <= ]]> NOW()
+					OR payment_method_type <![CDATA[ <> ]]> 1
+					OR status <![CDATA[ = ]]> 5
+					OR status <![CDATA[ = ]]> 6
+					OR status <![CDATA[ = ]]> 7
+					OR status <![CDATA[ = ]]> 8
+					OR amount_paid <![CDATA[ >= ]]> amount
+				)
+			</if>
+		</if>
+		<if test="isPendingRefunds != null">
+			<if test="isPendingRefunds == true">
+				AND((
+					(expire IS NOT NULL)
+					AND expire <![CDATA[ <= ]]> NOW()
+					OR status <![CDATA[ = ]]> 6
+					OR status <![CDATA[ = ]]> 7
+					OR status <![CDATA[ = ]]> 8)
+					AND amount_paid <![CDATA[ > ]]> 0
+					OR status <![CDATA[ = ]]> 5
+					AND amount_paid <![CDATA[ > ]]> amount
+				)
+			</if>
+			<if test="isPendingRefunds == false">
+				AND((expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+					AND status <![CDATA[ <> ]]> 6
+					AND status <![CDATA[ <> ]]> 7
+					AND status <![CDATA[ <> ]]> 8
+					OR amount_paid <![CDATA[ <= ]]> 0)
+				AND( status <![CDATA[ <> ]]> 5 OR amount_paid <![CDATA[ <= ]]> amount)
+			</if>
+		</if>
+
+		<if test="isExchangePoint != null">
+			AND is_exchange_point = #{isExchangePoint}
+		</if>
+		<if test="isAllocatedStock != null">
+			AND is_allocated_stock = #{isAllocatedStock}
+		</if>
+		<if test="hasExpired != null">
+			<if test="hasExpired == true">
+				 AND expire IS NOT NULL AND expire <![CDATA[ <= ]]> NOW()
+			</if>
+			<if test="hasExpired == false">
+				AND (expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+			</if>
+		</if>
+		<if test="ew.nonEmptyOfWhere == true">
+			AND
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查找订单 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`orders` orders
+		WHERE
+			1 = 1
+		<if test="type != null">
+			AND type = #{type.ordinal}
+		</if>
+		<if test="status != null">
+			AND `status` = #{status.ordinal}
+		</if>
+		<if test="store != null">
+			AND store_id = #{store.id}
+		</if>
+		<if test="member != null">
+			AND member_id = #{member.id}
+		</if>
+		<if test="product != null">
+			AND EXISTS (SELECT orderitem.id FROM `order_item` orderitem WHERE orderitem.orders = orders.id AND orderitem.sku_id IN (SELECT sku.id FROM `sku` sku WHERE sku.product_id = #{product.id}))
+		</if>
+		<if test="isPendingReceive != null">
+			<if test="isPendingReceive == true">
+				AND (expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+				AND payment_method_type = 1
+				AND status <![CDATA[ <> ]]> 5
+				AND status <![CDATA[ <> ]]> 6
+				AND status <![CDATA[ <> ]]> 7
+				AND status <![CDATA[ <> ]]> 8
+				AND amount_paid <![CDATA[ < ]]> amount 
+			</if>
+			<if test="isPendingReceive == false">
+				AND((expire IS NOT NULL)
+					AND expire <![CDATA[ <= ]]> NOW()
+					OR payment_method_type <![CDATA[ <> ]]> 1
+					OR status <![CDATA[ = ]]> 5
+					OR status <![CDATA[ = ]]> 6
+					OR status <![CDATA[ = ]]> 7
+					OR status <![CDATA[ = ]]> 8
+					OR amount_paid <![CDATA[ >= ]]> amount
+				)
+			</if>
+		</if>
+		<if test="isPendingRefunds != null">
+			<if test="isPendingRefunds == true">
+				AND((
+					(expire IS NOT NULL)
+					AND expire <![CDATA[ <= ]]> NOW()
+					OR status <![CDATA[ = ]]> 6
+					OR status <![CDATA[ = ]]> 7
+					OR status <![CDATA[ = ]]> 8)
+					AND amount_paid <![CDATA[ > ]]> 0
+					OR status <![CDATA[ = ]]> 5
+					AND amount_paid <![CDATA[ > ]]> amount
+				)
+			</if>
+			<if test="isPendingRefunds == false">
+				AND((expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+					AND status <![CDATA[ <> ]]> 6
+					AND status <![CDATA[ <> ]]> 7
+					AND status <![CDATA[ <> ]]> 8
+					OR amount_paid <![CDATA[ <= ]]> 0)
+				AND( status <![CDATA[ <> ]]> 5 OR amount_paid <![CDATA[ <= ]]> amount)
+			</if>
+		</if>
+
+		<if test="isExchangePoint != null">
+			AND is_exchange_point = #{isExchangePoint}
+		</if>
+		<if test="isAllocatedStock != null">
+			AND is_allocated_stock = #{isAllocatedStock}
+		</if>
+		<if test="hasExpired != null">
+			<if test="hasExpired == true">
+				 AND expire IS NOT NULL AND expire <![CDATA[ <= ]]> NOW()
+			</if>
+			<if test="hasExpired == false">
+				AND (expire IS NULL OR expire <![CDATA[ > ]]> NOW())
+			</if>
+		</if>
+		<if test="isRefund != null">
+			AND is_Refund = 0
+		</if>
+	</select>
+	
+	<!-- 查询订单创建数 -->
+	<select id="createOrderCount" resultType="long">
+		SELECT
+			count(id)
+		FROM
+			`orders`
+		<where>
+			<if test="store != null">
+				AND store_id = #{store.id}
+			</if>
+			<if test="beginDate != null">
+				AND created_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null">
+				AND created_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询订单完成数 -->
+	<select id="completeOrderCount" resultType="long">
+		SELECT
+			count(id)
+		FROM
+			`orders`
+		<where>
+			<if test="store != null">
+				AND store_id = #{store.id}
+			</if>
+			<if test="beginDate != null">
+				AND complete_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null">
+				AND complete_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+		</where>
+	</select>
+	
+	
+	<!-- 查询订单创建金额 -->
+	<select id="createOrderAmount" resultType="BigDecimal">
+		SELECT
+			IFNULL(sum(amount), 0)
+		FROM
+			`orders`
+		<where>
+			<if test="store != null">
+				AND store_id = #{store.id}
+			</if>
+			<if test="beginDate != null">
+				AND created_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null">
+				AND created_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询订单完成金额 -->
+	<select id="completeOrderAmount" resultType="BigDecimal">
+		SELECT
+			IFNULL(sum(amount), 0)
+		FROM
+			`orders`
+		<where>
+			<if test="store != null">
+				AND store_id = #{store.id}
+			</if>
+			<if test="beginDate != null">
+				AND complete_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null">
+				AND complete_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查询已发放佣金总额 -->
+	<select id="grantedCommissionTotalAmount" resultType="BigDecimal">
+		SELECT
+			sum(platform_commission_totals)
+		FROM
+			`order_item`
+		WHERE orders IN (
+			SELECT 
+				id 
+			FROM 
+				`orders`
+			<where>
+				<if test="store != null">
+					AND store_id = #{store.id}
+				</if>
+				<if test="beginDate != null">
+					AND complete_date <![CDATA[ >= ]]> #{beginDate}
+				</if>
+				<if test="endDate != null">
+					AND complete_date <![CDATA[ <= ]]> #{endDate}
+				</if>
+				<if test="statuses != null and statuses.length != 0">
+					AND `status` IN
+			        <foreach collection="statuses" item="statuse" open="(" separator="," close="))" >
+			        	#{statuse}
+			        </foreach>
+				</if>
+			</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Order">
+   		INSERT INTO orders(
+			id ,
+			created_date ,
+			version ,
+			address ,
+			amount ,
+			amount_paid ,
+			area_name ,
+			complete_date ,
+			consignee ,
+			exchange_point ,
+			expire ,
+			fee ,
+			freight ,
+			invoice_content ,
+			invoice_tax_number ,
+			invoice_title ,
+			is_allocated_stock ,
+			is_exchange_point ,
+			is_reviewed ,
+			memo ,
+			offset_amount ,
+			payment_method_name ,
+			payment_method_type ,
+			phone ,
+			price ,
+			quantity ,
+			refund_amount ,
+			returned_quantity ,
+			reward_point ,
+			shipped_quantity ,
+			shipping_method_name ,
+			sn ,
+			`status` ,
+			tax ,
+			`type` ,
+			weight ,
+			zip_code ,
+			area_id ,
+			member_id ,
+			payment_method_id ,
+			shipping_method_id ,
+			store_id,
+			data_source
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.address}, 
+			#{entity.amount}, 
+			#{entity.amountPaid}, 
+			#{entity.areaName}, 
+			#{entity.completeDate}, 
+			#{entity.consignee},
+			#{entity.exchangePoint}, 
+			#{entity.expire}, 
+			#{entity.fee}, 
+			#{entity.freight}, 
+			#{entity.invoice.content}, 
+			#{entity.invoice.taxNumber}, 
+			#{entity.invoice.title}, 
+			#{entity.isAllocatedStock}, 
+			#{entity.isExchangePoint}, 
+			#{entity.isReviewed}, 
+
+			#{entity.memo}, 
+			#{entity.offsetAmount}, 
+			#{entity.paymentMethodName}, 
+			#{entity.paymentMethodType}, 
+			#{entity.phone}, 
+			#{entity.price}, 
+
+			#{entity.quantity}, 
+			#{entity.refundAmount}, 
+			#{entity.returnedQuantity}, 
+			#{entity.rewardPoint}, 
+			#{entity.shippedQuantity}, 
+			#{entity.shippingMethodName}, 
+			#{entity.sn}, 
+			#{entity.status}, 
+			#{entity.tax}, 
+			#{entity.type}, 
+			#{entity.weight}, 
+			#{entity.zipCode}, 
+			#{entity.area.id},
+			#{entity.member.id}, 
+			#{entity.paymentMethod.id}, 
+			#{entity.shippingMethod.id}, 
+			#{entity.store.id},
+			#{entity.dataSource}
+		)
+  	</insert>
+  	
+	<!-- 更新 -->
+	<update id="update" parameterType="net.xiaoxiangshop.entity.Order">
+   		UPDATE orders
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version},
+			address = #{entity.address},
+			amount = #{entity.amount},
+			amount_paid = #{entity.amountPaid},
+			area_name = #{entity.areaName},
+			complete_date = #{entity.completeDate},
+			consignee = #{entity.consignee},
+			exchange_point = #{entity.exchangePoint},
+			expire = #{entity.expire},
+			fee = #{entity.fee},
+			freight = #{entity.freight},
+			invoice_content = #{entity.invoice.content},
+			invoice_tax_number = #{entity.invoice.taxNumber},
+			invoice_title = #{entity.invoice.title},
+			is_allocated_stock = #{entity.isAllocatedStock},
+			is_exchange_point = #{entity.isExchangePoint},
+			is_reviewed = #{entity.isReviewed},
+			memo = #{entity.memo},
+			offset_amount = #{entity.offsetAmount},
+			payment_method_name = #{entity.paymentMethodName},
+			payment_method_type = #{entity.paymentMethodType},
+			phone = #{entity.phone},
+			price = #{entity.price},
+			quantity = #{entity.quantity},
+			refund_amount = #{entity.refundAmount},
+			returned_quantity = #{entity.returnedQuantity},
+			reward_point = #{entity.rewardPoint},
+			shipped_quantity = #{entity.shippedQuantity},
+			shipping_method_name = #{entity.shippingMethodName},
+			`status` = #{entity.status},
+			tax = #{entity.tax},
+			`type` = #{entity.type},
+			weight = #{entity.weight},
+			zip_code = #{entity.zipCode},
+			area_id = #{entity.area.id},
+			member_id = #{entity.member.id},
+			payment_method_id = #{entity.paymentMethod.id},
+			is_export = #{entity.isExport},
+			export_date = #{entity.exportDate},
+			erp_sync = #{entity.erpSync},
+			erp_sync_time = #{entity.erpSyncTime},
+			shipping_method_id = #{entity.shippingMethod.id}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+
+
+	<update id="updateIsRefund" parameterType="net.xiaoxiangshop.entity.Order">
+   		UPDATE orders
+		SET last_modified_date = #{order.lastModifiedDate},
+			version = #{order.version},
+			is_Refund=#{order.isRefund}
+		WHERE
+			id = #{order.id}
+		AND version = #{order.version}
+  	</update>
+  
+</mapper>

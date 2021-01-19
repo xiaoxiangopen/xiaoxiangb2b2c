@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.UserDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.User">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="is_enabled" property="isEnabled" />
+        <result column="is_locked" property="isLocked" />
+        <result column="last_login_date" property="lastLoginDate" />
+        <result column="last_login_ip" property="lastLoginIp" />
+        <result column="lock_date" property="lockDate" />
+        <collection property="socialUsers" select="net.xiaoxiangshop.dao.SocialUserDao.findSet" column="{attributeName=user_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.SocialUser" fetchType="lazy"/>
+        <collection property="paymentTransactions" select="net.xiaoxiangshop.dao.PaymentTransactionDao.findSet" column="{attributeName=user_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.PaymentTransaction" fetchType="lazy"/>
+        <collection property="auditLogs" select="net.xiaoxiangshop.dao.AuditLogDao.findSet" column="{attributeName=user_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.AuditLog" fetchType="lazy"/>
+        <collection property="fromMessages" select="net.xiaoxiangshop.dao.MessageDao.findSet" column="{attributeName=from_user_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Message" fetchType="lazy"/>
+        <collection property="toMessages" select="net.xiaoxiangshop.dao.MessageDao.findSet" column="{attributeName=to_user_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Message" fetchType="lazy"/>
+        <collection property="user1MessageGroups" select="net.xiaoxiangshop.dao.MessageGroupDao.findSet" column="{attributeName=user1_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.MessageGroup" fetchType="lazy"/>
+        <collection property="user2MessageGroups" select="net.xiaoxiangshop.dao.MessageGroupDao.findSet" column="{attributeName=user2_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.MessageGroup" fetchType="lazy"/>
+        <discriminator javaType="string" column="dtype">
+        	<case value="Business" resultType="net.xiaoxiangshop.entity.Business">
+        		<result column="username" property="username" />
+		   		<result column="encoded_password" property="encodedPassword" />
+		        <result column="email" property="email" />
+		        <result column="mobile" property="mobile" />
+		        <result column="balance" property="balance" />
+		        <result column="frozen_amount" property="frozenAmount" />
+		        <result column="name" property="name" />
+		        <result column="phone" property="phone" />
+		        <result column="legal_person" property="legalPerson" />
+		        <result column="license_image" property="licenseImage" />
+		        <result column="license_number" property="licenseNumber" />
+		        <result column="id_card" property="idCard" />
+		        <result column="id_card_image" property="idCardImage" />
+		        <result column="organization_code" property="organizationCode" />
+		        <result column="organization_image" property="organizationImage" />
+		        <result column="identification_number" property="identificationNumber" />
+		        <result column="tax_image" property="taxImage" />
+		        <result column="bank_account" property="bankAccount" />
+		        <result column="bank_name" property="bankName" />
+		        <result column="attribute_value0" property="attributeValue0" />
+		        <result column="attribute_value1" property="attributeValue1" />
+		        <result column="attribute_value10" property="attributeValue10" />
+		        <result column="attribute_value11" property="attributeValue11" />
+		        <result column="attribute_value12" property="attributeValue12" />
+		        <result column="attribute_value13" property="attributeValue13" />
+		        <result column="attribute_value14" property="attributeValue14" />
+		        <result column="attribute_value15" property="attributeValue15" />
+		        <result column="attribute_value16" property="attributeValue16" />
+		        <result column="attribute_value17" property="attributeValue17" />
+		        <result column="attribute_value18" property="attributeValue18" />
+		        <result column="attribute_value19" property="attributeValue19" />
+		        <result column="attribute_value2" property="attributeValue2" />
+		        <result column="attribute_value3" property="attributeValue3" />
+		        <result column="attribute_value4" property="attributeValue4" />
+		        <result column="attribute_value5" property="attributeValue5" />
+		        <result column="attribute_value6" property="attributeValue6" />
+		        <result column="attribute_value7" property="attributeValue7" />
+		        <result column="attribute_value8" property="attributeValue8" />
+		        <result column="attribute_value9" property="attributeValue9" />
+		        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.findAttributeByUsers" column="{attributeName=store_users, attributeValue=id}" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+        	</case>
+        	<case value="Member" resultType="net.xiaoxiangshop.entity.Member">
+        		<result column="username" property="username" />
+		    	<result column="encoded_password" property="encodedPassword" />
+		    	<result column="email" property="email" />
+		    	<result column="mobile" property="mobile" />
+		    	<result column="point" property="point" />
+		    	<result column="balance" property="balance" />
+		    	<result column="frozen_amount" property="frozenAmount" />
+		    	<result column="amount" property="amount" />
+		    	<result column="name" property="name" />
+		    	<result column="gender" property="gender" />
+		    	<result column="birth" property="birth" />
+		    	<result column="address" property="address" />
+		    	<result column="zip_code" property="zipCode" />
+		    	<result column="phone" property="phone" />
+		        <result column="attribute_value0" property="attributeValue0" />
+		        <result column="attribute_value1" property="attributeValue1" />
+		        <result column="attribute_value2" property="attributeValue2" />
+		        <result column="attribute_value3" property="attributeValue3" />
+		        <result column="attribute_value4" property="attributeValue4" />
+		        <result column="attribute_value5" property="attributeValue5" />
+		        <result column="attribute_value6" property="attributeValue6" />
+		        <result column="attribute_value7" property="attributeValue7" />
+		        <result column="attribute_value8" property="attributeValue8" />
+		        <result column="attribute_value9" property="attributeValue9" />
+		        <result column="avatar_url" property="avatarUrl" />
+				<result column="points" property="points" />
+		        <association property="area" select="net.xiaoxiangshop.dao.AreaDao.find" column="area_id" javaType="net.xiaoxiangshop.entity.Area" fetchType="lazy"/>
+		        <association property="memberRank" select="net.xiaoxiangshop.dao.MemberRankDao.find" column="member_rank_id" javaType="net.xiaoxiangshop.entity.MemberRank" fetchType="lazy"/>
+		        <association property="distributor" select="net.xiaoxiangshop.dao.DistributorDao.findByAttribute" column="{attributeName=member_id, attributeValue=id}" javaType="net.xiaoxiangshop.entity.Distributor" fetchType="lazy"/>
+		        <association property="cart" select="net.xiaoxiangshop.dao.CartDao.findByAttribute" column="{attributeName=member_id, attributeValue=id}" javaType="net.xiaoxiangshop.entity.Cart" fetchType="lazy"/>
+		        <collection property="orders" select="net.xiaoxiangshop.dao.OrderDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Order" fetchType="lazy"/>
+		        <collection property="memberDepositLogs" select="net.xiaoxiangshop.dao.MemberDepositLogDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.MemberDepositLog" fetchType="lazy"/>
+		        <collection property="receivers" select="net.xiaoxiangshop.dao.ReceiverDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Receiver" fetchType="lazy"/>
+		        <collection property="reviews" select="net.xiaoxiangshop.dao.ReviewDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Review" fetchType="lazy"/>
+		        <collection property="consultations" select="net.xiaoxiangshop.dao.ConsultationDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Consultation" fetchType="lazy"/>
+		        <collection property="productFavorites" select="net.xiaoxiangshop.dao.ProductFavoriteDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.ProductFavorite" fetchType="lazy"/>
+		        <collection property="storeFavorites" select="net.xiaoxiangshop.dao.StoreFavoriteDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.StoreFavorite" fetchType="lazy"/>
+		        <collection property="productNotifies" select="net.xiaoxiangshop.dao.ProductNotifyDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.ProductNotify" fetchType="lazy"/>
+		        <collection property="pointLogs" select="net.xiaoxiangshop.dao.PointLogDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.PointLog" fetchType="lazy"/>
+		        <collection property="aftersales" select="net.xiaoxiangshop.dao.AftersalesDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Aftersales" fetchType="lazy"/>
+        	</case>
+        	<case value="Admin" resultType="net.xiaoxiangshop.entity.Admin">
+        		<result column="username" property="username" />
+		        <result column="encoded_password" property="encodedPassword" />
+		        <result column="email" property="email" />
+		        <result column="mobile" property="mobile" />
+		        <result column="name" property="name" />
+		        <result column="department" property="department" />
+		        <collection property="roles" select="net.xiaoxiangshop.dao.RoleDao.findSet" column="{attributeValue=id}" ofType="net.xiaoxiangshop.entity.Role" fetchType="lazy" />
+        	</case>
+        </discriminator>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        dtype, created_date, last_modified_date, is_enabled, is_locked, last_login_date, last_login_ip, lock_date, department, email, encoded_password, 
+        mobile, name, username, attribute_value0, attribute_value1, attribute_value10, attribute_value11, attribute_value12, attribute_value13, 
+        attribute_value14, attribute_value15, attribute_value16, attribute_value17, attribute_value18, attribute_value19, attribute_value2, 
+        attribute_value3, attribute_value4, attribute_value5, attribute_value6, attribute_value7, attribute_value8, attribute_value9, avatar_url, balance, 
+        bank_account, bank_name, frozen_amount, id_card, id_card_image, identification_number, legal_person, license_image, license_number, 
+        organization_code, organization_image, phone, safe_key_expire, safe_key_value, tax_image, address, amount, birth, gender, point, 
+        zip_code, area_id, member_rank_id, 'user_id', 'business_id', 'member_id', 'from_user_id', 'to_user_id', 'user1_id', 'user2_id','store_users',points
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 根据属性查找实体对象 -->
+	<select id="findByAttribute" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+</mapper>

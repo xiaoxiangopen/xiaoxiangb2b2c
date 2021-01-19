@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.BusinessDao">
+	
+	<!-- User查询映射结果 -->
+    <resultMap id="UserResultMap" type="net.xiaoxiangshop.entity.User">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="is_enabled" property="isEnabled" />
+        <result column="is_locked" property="isLocked" />
+        <result column="last_login_date" property="lastLoginDate" />
+        <result column="last_login_ip" property="lastLoginIp" />
+        <result column="lock_date" property="lockDate" />
+    </resultMap>
+    
+   <!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Business" extends="UserResultMap">
+   		<result column="username" property="username" />
+   		<result column="encoded_password" property="encodedPassword" />
+        <result column="email" property="email" />
+        <result column="mobile" property="mobile" />
+        <result column="balance" property="balance" />
+        <result column="frozen_amount" property="frozenAmount" />
+        <result column="name" property="name" />
+        <result column="phone" property="phone" />
+        <result column="legal_person" property="legalPerson" />
+        <result column="license_image" property="licenseImage" />
+        <result column="license_number" property="licenseNumber" />
+        <result column="id_card" property="idCard" />
+        <result column="id_card_image" property="idCardImage" />
+        <result column="organization_code" property="organizationCode" />
+        <result column="organization_image" property="organizationImage" />
+        <result column="identification_number" property="identificationNumber" />
+        <result column="tax_image" property="taxImage" />
+        <result column="bank_account" property="bankAccount" />
+        <result column="bank_name" property="bankName" />
+        <result column="attribute_value0" property="attributeValue0" />
+        <result column="attribute_value1" property="attributeValue1" />
+        <result column="attribute_value10" property="attributeValue10" />
+        <result column="attribute_value11" property="attributeValue11" />
+        <result column="attribute_value12" property="attributeValue12" />
+        <result column="attribute_value13" property="attributeValue13" />
+        <result column="attribute_value14" property="attributeValue14" />
+        <result column="attribute_value15" property="attributeValue15" />
+        <result column="attribute_value16" property="attributeValue16" />
+        <result column="attribute_value17" property="attributeValue17" />
+        <result column="attribute_value18" property="attributeValue18" />
+        <result column="attribute_value19" property="attributeValue19" />
+        <result column="attribute_value2" property="attributeValue2" />
+        <result column="attribute_value3" property="attributeValue3" />
+        <result column="attribute_value4" property="attributeValue4" />
+        <result column="attribute_value5" property="attributeValue5" />
+        <result column="attribute_value6" property="attributeValue6" />
+        <result column="attribute_value7" property="attributeValue7" />
+        <result column="attribute_value8" property="attributeValue8" />
+        <result column="attribute_value9" property="attributeValue9" />
+	   <association property="store" select="net.xiaoxiangshop.dao.StoreDao.findAttributeByUsers" column="{attributeName=store_users, attributeValue=id}" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+<!--        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.findByAttribute" column="{attributeName=business_id, attributeValue=id}" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>-->
+        <collection property="businessCashs" select="net.xiaoxiangshop.dao.BusinessCashDao.findSet" column="{attributeName=business_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.BusinessCash" fetchType="lazy"/>
+        <collection property="businessDepositLogs" select="net.xiaoxiangshop.dao.BusinessDepositLogDao.findSet" column="{attributeName=business_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.BusinessDepositLog" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        dtype, created_date, last_modified_date, is_enabled, is_locked, last_login_date, last_login_ip, lock_date, department, email, encoded_password, mobile, name, username, attribute_value0, attribute_value1, attribute_value10, attribute_value11, attribute_value12, attribute_value13, attribute_value14, attribute_value15, attribute_value16, attribute_value17, attribute_value18, attribute_value19, attribute_value2, attribute_value3, attribute_value4, attribute_value5, attribute_value6, attribute_value7, attribute_value8, attribute_value9, balance, bank_account, bank_name, frozen_amount, id_card, id_card_image, identification_number, legal_person, license_image, license_number, organization_code, organization_image, phone, safe_key_expire, safe_key_value, tax_image, address, amount, birth, gender, point, zip_code, area_id, member_rank_id, 'business_id','store_users'
+    </sql>
+    
+    <!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+		AND `id` = #{id}
+	</select>
+	
+	<!-- 查找所有实体对象集合 -->
+	<select id="findAll" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+	</select>
+	
+	<!-- 通过名称查找会员 -->
+	<select id="search" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+		<if test="keyword != null">
+			AND username LIKE concat('%', #{keyword}, '%')
+		</if>
+
+		<if test="count != null">
+			LIMIT 0, ${count}
+		</if>
+	</select>
+	
+	<!-- 根据属性查找实体对象 -->
+	<select id="findByAttribute" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+		AND ${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查询商家数量 -->
+	<select id="count" resultType="long">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+		<if test="beginDate != null">
+			AND created_date <![CDATA[ >= ]]> #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND created_date <![CDATA[ <= ]]> #{endDate}
+		</if>
+	</select>
+	
+	<!-- 查询商家数量 -->
+	<select id="total" resultType="long">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+	</select>
+	
+	<!-- 查找实体对象分页 -->
+	<select id="selectPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+		<if test="ew.nonEmptyOfWhere == true">
+			AND 
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 删除所有 -->
+  	<update id="delete" parameterType="java.lang.Long">
+  		DELETE
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+		AND `id` = #{id}
+  	</update>
+  	
+  	<!-- 判断是否存在 -->
+	<select id="exists" resultType="boolean">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+		AND
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 判断是否唯一 -->
+	<select id="unique" resultType="boolean">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Business'
+		AND
+			${attributeName } = #{attributeValue}
+		<if test="id != null">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 查询总余额 -->
+	<select id="totalBalance" resultType="BigDecimal">
+		SELECT
+			IFNULL(sum(balance), 0)
+		FROM
+			users
+		WHERE
+			dtype = 'Business'
+	</select>
+	
+	<!-- 查询冻结总额 -->
+	<select id="frozenTotalAmount" resultType="BigDecimal">
+		SELECT
+			IFNULL(sum(frozen_amount), 0)
+		FROM
+			users
+		WHERE
+			dtype = 'Business'
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Business">
+   		INSERT INTO users(
+			id ,
+			dtype, 
+			created_date ,
+			version ,
+			is_enabled ,
+			is_locked ,
+			last_login_date ,
+			last_login_ip ,
+			lock_date ,
+			email ,
+			encoded_password ,
+			mobile ,
+			`name` ,
+			username ,
+			attribute_value0 ,
+			attribute_value1 ,
+			attribute_value10 ,
+			attribute_value11 ,
+			attribute_value12 ,
+			attribute_value13 ,
+			attribute_value14 ,
+			attribute_value15 ,
+			attribute_value16 ,
+			attribute_value17 ,
+			attribute_value18 ,
+			attribute_value19 ,
+			attribute_value2 ,
+			attribute_value3 ,
+			attribute_value4 ,
+			attribute_value5 ,
+			attribute_value6 ,
+			attribute_value7 ,
+			attribute_value8 ,
+			attribute_value9 ,
+			balance ,
+			bank_account ,
+			bank_name ,
+			frozen_amount ,
+			id_card ,
+			id_card_image ,
+			identification_number ,
+			legal_person ,
+			license_image ,
+			license_number ,
+			organization_code ,
+			organization_image ,
+			phone ,
+			safe_key_expire ,
+			safe_key_value ,
+			tax_image 
+		) VALUES (
+			#{entity.id}, 
+			'Business',
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.isEnabled}, 
+			#{entity.isLocked}, 
+			#{entity.lastLoginDate}, 
+			#{entity.lastLoginIp}, 
+			#{entity.lockDate}, 
+			#{entity.email}, 
+			#{entity.encodedPassword}, 
+			#{entity.mobile}, 
+			#{entity.name}, 
+			#{entity.username}, 
+			#{entity.attributeValue0}, 
+			#{entity.attributeValue1}, 
+			#{entity.attributeValue10}, 
+			#{entity.attributeValue11}, 
+			#{entity.attributeValue12}, 
+			#{entity.attributeValue13}, 
+			#{entity.attributeValue14}, 
+			#{entity.attributeValue15}, 
+			#{entity.attributeValue16}, 
+			#{entity.attributeValue17}, 
+			#{entity.attributeValue18}, 
+			#{entity.attributeValue19}, 
+			#{entity.attributeValue2}, 
+			#{entity.attributeValue3}, 
+			#{entity.attributeValue4}, 
+			#{entity.attributeValue5}, 
+			#{entity.attributeValue6}, 
+			#{entity.attributeValue7}, 
+			#{entity.attributeValue8}, 
+			#{entity.attributeValue9}, 
+			#{entity.balance}, 
+			#{entity.bankAccount}, 
+			#{entity.bankName}, 
+			#{entity.frozenAmount}, 
+			#{entity.idCard}, 
+			#{entity.idCardImage}, 
+			#{entity.identificationNumber}, 
+			#{entity.legalPerson}, 
+			#{entity.licenseImage}, 
+			#{entity.licenseNumber}, 
+			#{entity.organizationCode}, 
+			#{entity.organizationImage}, 
+			#{entity.phone}, 
+			#{entity.safeKey.expire}, 
+			#{entity.safeKey.value}, 
+			#{entity.taxImage}
+		)
+  	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="net.xiaoxiangshop.entity.Business">
+   		UPDATE users
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version},
+			is_enabled = #{entity.isEnabled},
+			is_locked = #{entity.isLocked},
+			last_login_date = #{entity.lastLoginDate},
+			last_login_ip = #{entity.lastLoginIp},
+			lock_date = #{entity.lockDate},
+			email = #{entity.email},
+			encoded_password = #{entity.encodedPassword},
+			mobile = #{entity.mobile},
+			`name` = #{entity.name},
+			attribute_value0 = #{entity.attributeValue0},
+			attribute_value1 = #{entity.attributeValue1},
+			attribute_value10 = #{entity.attributeValue10},
+			attribute_value11 = #{entity.attributeValue11},
+			attribute_value12 = #{entity.attributeValue12},
+			attribute_value13 = #{entity.attributeValue13},
+			attribute_value14 = #{entity.attributeValue14},
+			attribute_value15 = #{entity.attributeValue15},
+			attribute_value16 = #{entity.attributeValue16},
+			attribute_value17 = #{entity.attributeValue17},
+			attribute_value18 = #{entity.attributeValue18},
+			attribute_value19 = #{entity.attributeValue19},
+			attribute_value2 = #{entity.attributeValue2},
+			attribute_value3 = #{entity.attributeValue3},
+			attribute_value4 = #{entity.attributeValue4},
+			attribute_value5 = #{entity.attributeValue5},
+			attribute_value6 = #{entity.attributeValue6},
+			attribute_value7 = #{entity.attributeValue7},
+			attribute_value8 = #{entity.attributeValue8},
+			attribute_value9 = #{entity.attributeValue9},
+			balance = #{entity.balance},
+			bank_account = #{entity.bankAccount},
+			bank_name = #{entity.bankName},
+			frozen_amount = #{entity.frozenAmount},
+			id_card = #{entity.idCard},
+			id_card_image = #{entity.idCardImage},
+			identification_number = #{entity.identificationNumber},
+			legal_person = #{entity.legalPerson},
+			license_image = #{entity.licenseImage},
+			license_number = #{entity.licenseNumber},
+			organization_code = #{entity.organizationCode},
+			organization_image = #{entity.organizationImage},
+			phone = #{entity.phone},
+			safe_key_expire = #{entity.safeKey.expire},
+			safe_key_value = #{entity.safeKey.value},
+			tax_image = #{entity.taxImage}
+		WHERE
+			`dtype` = 'Business'
+		AND id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+
+
+	<!-- 更新 -->
+	<update id="addMemberBalance" parameterType="net.xiaoxiangshop.entity.Business">
+   		UPDATE users
+		SET last_modified_date = #{business.lastModifiedDate},
+			version = #{business.version},
+			balance = #{business.balance}
+		WHERE
+			`dtype` = 'Member'
+		AND id = #{business.id}
+		AND version = #{business.version}
+  	</update>
+  
+</mapper>

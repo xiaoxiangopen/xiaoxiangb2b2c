@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.PaymentTransactionDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.PaymentTransaction">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="amount" property="amount" />
+        <result column="expire" property="expire" />
+        <result column="fee" property="fee" />
+        <result column="is_success" property="isSuccess" />
+        <result column="payment_plugin_id" property="paymentPluginId" />
+        <result column="payment_plugin_name" property="paymentPluginName" />
+        <result column="re_pay_url" property="rePayUrl" />
+        <result column="sn" property="sn" />
+		<result column="erp_sync" property="erpSync" />
+		<result column="erp_sync_time" property="erpSyncTime" />
+        <result column="type" property="type" />
+		<result column="tnt_no" property="tntNo" />
+        <association property="parent" select="find" column="parent_id" javaType="net.xiaoxiangshop.entity.PaymentTransaction" fetchType="lazy"/>
+        <association property="order" select="net.xiaoxiangshop.dao.OrderDao.find" column="orders" javaType="net.xiaoxiangshop.entity.Order" fetchType="lazy"/>
+       	<association property="svc" select="net.xiaoxiangshop.dao.SvcDao.find" column="svc_id" javaType="net.xiaoxiangshop.entity.Svc" fetchType="lazy"/>
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+        <association property="user" select="net.xiaoxiangshop.dao.UserDao.find" column="user_id"  javaType="net.xiaoxiangshop.entity.User" fetchType="lazy"/>
+        <collection property="children" select="findSet" column="{attributeName=parentId, attributeValue=id}" ofType="net.xiaoxiangshop.entity.PaymentTransaction" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, amount, expire, fee, is_success, payment_plugin_id, payment_plugin_name, re_pay_url, sn,
+        type, orders, parent_id, store_id, svc_id, user_id, 'parentId',tnt_no
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`payment_transaction` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 根据属性查找实体对象 -->
+	<select id="findByAttribute" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`payment_transaction` 
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`payment_transaction`
+		<choose>
+			<when test="attributeName == 'parentId'">
+				WHERE
+					parent_id = #{attributeValue}
+			</when>
+			<otherwise>
+				WHERE
+					${attributeName} = #{attributeValue}
+			</otherwise>
+		</choose>
+		ORDER BY
+			created_date ASC
+	</select>
+	
+	<!-- 查找可用支付事务 -->
+	<select id="findAvailable" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`payment_transaction`
+		WHERE
+			type = #{lineItem.type.ordinal}
+		AND amount = #{amount}
+		AND fee = #{fee}
+		AND is_success = FALSE
+		AND payment_plugin_id = #{paymentPlugin.id}
+		AND parent_id IS NULL
+		AND (expire IS NULL OR expire > NOW())
+		<choose>
+			<when test="lineItem.type.name == 'ORDER_PAYMENT'">
+				AND orders = #{lineItem.target.id}
+			</when>
+			<when test="lineItem.type.name == 'SVC_PAYMENT'">
+				AND svc_id = #{lineItem.target.id}
+			</when>
+			<when test="lineItem.type.name == 'DEPOSIT_RECHARGE'">
+				AND user_id = #{lineItem.target.id}
+			</when>
+			<when test="lineItem.type.name == 'BAIL_PAYMENT'">
+				AND store_id = #{lineItem.target.id}
+			</when>
+		</choose>
+		LIMIT 0, 1
+	</select>
+	
+	<!-- 查找可用父支付事务 -->
+	<select id="findAvailableParent" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`payment_transaction`
+		WHERE
+			(expire IS NULL OR expire > NOW())
+		AND is_success = FALSE
+		AND payment_plugin_id = #{paymentPlugin.id}
+		<!--  -->
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.PaymentTransaction">
+    	INSERT INTO payment_transaction(
+			id ,
+			created_date ,
+			version ,
+			amount ,
+			expire ,
+			fee ,
+			is_success ,
+			payment_plugin_id ,
+			payment_plugin_name ,
+			re_pay_url ,
+			sn ,
+			`type` ,
+			orders ,
+			parent_id ,
+			store_id ,
+			svc_id ,
+			user_id,
+			tnt_no
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.amount}, 
+			#{entity.expire}, 
+			#{entity.fee}, 
+			#{entity.isSuccess}, 
+			#{entity.paymentPluginId}, 
+			#{entity.paymentPluginName}, 
+			#{entity.rePayUrl}, 
+			#{entity.sn}, 
+			#{entity.type}, 
+			#{entity.order.id}, 
+			#{entity.parent.id}, 
+			#{entity.store.id}, 
+			#{entity.svc.id}, 
+			#{entity.user.id},
+			#{entity.tntNo}
+		)
+  	</insert>
+	
+	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.PaymentTransaction">
+    	UPDATE payment_transaction
+		SET last_modified_date = NOW(),
+			is_success = #{entity.isSuccess},
+			erp_sync = #{entity.erpSync},
+			erp_sync_time = #{entity.erpSyncTime}
+		WHERE
+			id = #{entity.id}
+  	</update>
+
+	<select id="findByOrders" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM
+		`payment_transaction`
+		WHERE
+		 is_success = true
+		AND orders = #{orderId}
+
+	</select>
+  
+</mapper>

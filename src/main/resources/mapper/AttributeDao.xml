@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.AttributeDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Attribute">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="orders" property="order" />
+        <result column="name" property="name" />
+        <result column="options" property="options" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.OptionConverter" />
+        <result column="property_index" property="propertyIndex" />
+        <association property="productCategory" select="net.xiaoxiangshop.dao.ProductCategoryDao.find" column="product_category_id"  javaType="net.xiaoxiangshop.entity.ProductCategory"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, orders, name, options, property_index, product_category_id
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`attribute` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`attribute`
+		WHERE
+			${attributeName} = #{attributeValue}
+		ORDER BY orders ASC
+	</select>
+	
+	<!-- 查找未使用的属性序号 -->
+	<select id="findUnusedPropertyIndex" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			attribute
+		WHERE
+			product_category_id = #{productCategory.id}
+		<if test="index != null">
+			AND property_index = #{index}
+		</if>
+	</select>
+	
+	<!-- 查找属性 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`attribute`
+		<where>
+			<if test="productCategory != null">
+				AND product_category_id = #{productCategory.id}
+			</if>
+			<if test="ew.nonEmptyOfWhere == true">
+				AND
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 查找实体对象分页 -->
+	<select id="selectPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`attribute`
+		<if test="ew.nonEmptyOfWhere == true">
+			WHERE
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Attribute">
+   		INSERT INTO attribute(
+			id ,
+			created_date ,
+			version ,
+			orders ,
+			`name` ,
+			`options` ,
+			property_index ,
+			product_category_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.order}, 
+			#{entity.name}, 
+			#{entity.options, typeHandler=net.xiaoxiangshop.handlers.OptionConverter},
+			#{entity.propertyIndex}, 
+			#{entity.productCategory.id}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.Attribute">
+    	UPDATE attribute
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			orders = #{entity.order},
+			`name` = #{entity.name},
+			`options` = #{entity.options, typeHandler=net.xiaoxiangshop.handlers.OptionConverter},
+			property_index = #{entity.propertyIndex},
+			product_category_id = #{entity.productCategory.id}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  
+</mapper>

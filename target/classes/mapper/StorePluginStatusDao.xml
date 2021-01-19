@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.StorePluginStatusDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.StorePluginStatus">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="end_date" property="endDate" />
+        <result column="plugin_id" property="pluginId" />
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, end_date, plugin_id, store_id
+    </sql>
+    
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`store_plugin_status` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找店铺插件状态 -->
+	<select id="findByStore" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`store_plugin_status`
+		WHERE
+			store_id = #{store.id}
+		AND plugin_id = #{pluginId}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`store_plugin_status`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+
+
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.StorePluginStatus">
+    	INSERT INTO store_plugin_status(
+			id ,
+			created_date ,
+			version ,
+			end_date,
+			plugin_id,
+			store_id
+		) VALUES (
+			#{entity.id},
+			#{entity.createdDate},
+			#{entity.version},
+			#{entity.endDate},
+			#{entity.pluginId},
+			#{entity.store.id}
+		)
+  	</insert>
+
+
+	<insert id="update" parameterType="net.xiaoxiangshop.entity.StorePluginStatus">
+
+
+		UPDATE store_plugin_status
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			end_date=#{entity.endDate}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+
+  	</insert>
+	
+</mapper>

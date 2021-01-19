@@ -1,0 +1,117 @@
+@charset "utf-8";
+
+ 
+/* ---------- error ---------- */
+.error .main-header {
+	margin-bottom: 0px;
+}
+ 
+.error main {
+	padding: 100px 0px;
+	background: url(../images/error_background.png) repeat-x;
+}
+
+.error main .media {
+	width: 500px;
+	margin: 0px auto;
+}
+
+.error main .media .media-left .media-object {
+	margin-right: 30px;
+}
+
+.error main .media .media-body {
+	line-height: 30px;
+}
+
+.error main .media .media-body a {
+	margin-right: 10px;
+}
+
+/* ---------- mobile-error ---------- */
+.mobile.error main {
+	width: 100%;
+	height: 100%;
+	background: url(../images/error_background.png) repeat-x;
+}
+
+.mobile.error main .error-wrapper {
+	width: 100%;
+	line-height: 25px;
+	position: absolute;
+	top: 25%;
+	text-align: center;
+	background-color: transparent;
+}
+
+.mobile.error main h3 {
+	margin-bottom: 5px;
+}
+
+/* ---------- unsupported-browser ---------- */
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+.unsupported-browser-backdrop {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	_position: absolute;
+	top: 0px;
+	_top: expression(documentElement.scrollTop);
+	right: 0px;
+	bottom: 0px;
+	left: 0px;
+	z-index: 900;
+	filter: alpha(opacity=50);
+	opacity: 0.5;
+	background-color: #000000;
+}
+
+.unsupported-browser {
+	width: 400px;
+	height: 300px;
+	padding: 150px 100px;
+	margin-left: -300px;
+	position: fixed;
+	_position: absolute;
+	top: 10%;
+	_top: expression(documentElement.scrollTop + Math.round(documentElement.offsetHeight * 0.1));
+	left: 50%;
+	z-index: 1000;
+	text-align: center;
+	background: url(../images/unsupported_browser.png) no-repeat;
+}
+
+.unsupported-browser p {
+	line-height: 30px;
+	color: #ffffff;
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+}
+
+.unsupported-browser p strong {
+	color: #fcf000;
+	font-size: 18px;
+}
+
+.unsupported-browser p a {
+	margin: 0px 5px;
+	color: #ffffff;
+	text-decoration: underline;
+}
+
+.unsupported-browser p a:hover {
+	color: #333333;
+}
+
+.unsupported-browser .qrcode {
+	width: 100px;
+	padding: 5px;
+	margin: 20px auto;
+	border-radius: 5px;
+	background-color: #ffffff;
+	background-color: rgba(0, 0, 0, 0.1);
+}

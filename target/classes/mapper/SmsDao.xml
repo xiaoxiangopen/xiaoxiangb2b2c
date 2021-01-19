@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.SmsDao">
+	<insert id="insetSmsInfo" parameterType="java.util.HashMap">
+		INSERT INTO sms_info(
+					mobile ,
+					msg ,
+					resptime ,
+					respstatus ,
+					msgid ,
+					createtime
+				)
+				VALUES (
+					#{mobile},
+					#{msg},
+					#{resptime},
+					#{respstatus},
+					#{msgid},
+					now()
+				)
+	</insert>
+</mapper>

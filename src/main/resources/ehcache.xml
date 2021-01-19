@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="false">
+
+	<diskStore path="${java.io.tmpdir}/xiaoxiangshop_cache" />
+	
+	<defaultCache maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="1800" timeToLiveSeconds="1800" overflowToDisk="true"/>
+	<cache name="setting" maxElementsInMemory="100" eternal="true" overflowToDisk="true" copyOnRead="true" />
+	<cache name="templateConfig" maxElementsInMemory="100" eternal="true" overflowToDisk="true" />
+	<cache name="pluginConfig" maxElementsInMemory="100" eternal="true" overflowToDisk="true" />
+	<cache name="messageConfig" maxElementsInMemory="100" eternal="true" overflowToDisk="true" />
+	<cache name="indexPage" maxElementsInMemory="1000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="storeIndexPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="articleListPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="articleDetailPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="productListPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="productDetailPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="brandListPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="brandDetailPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="productCategoryPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+
+	<cache name="friendLinkPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="consultationDetailPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="reviewDetailPage" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="areaPage" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="baseJsPage" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="sitemapPage" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="seo" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="adPosition" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="memberAttribute" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="businessAttribute" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="navigation" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="friendLink" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="instantMessage" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="brand" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="attribute" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="article" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="articleCategory" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="articleTag" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="product" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="productCategory" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="productTag" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="storeProductCategory" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="storeProductTag" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="storeAdImage" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="productFavorite" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="storeFavorite" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="consultation" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="review" maxElementsInMemory="1000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+
+	<cache name="transitSteps" maxElementsInMemory="10000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="articleHits" maxElementsInMemory="10000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" diskPersistent="true" />
+	<cache name="productHits" maxElementsInMemory="10000" timeToIdleSeconds="60" timeToLiveSeconds="120" eternal="false" overflowToDisk="true" diskPersistent="true" />
+	<cache name="orderLock" maxElementsInMemory="1000000" timeToLiveSeconds="60" eternal="false" overflowToDisk="true" />
+	<cache name="captcha" maxElementsInMemory="1000000" timeToIdleSeconds="600" timeToLiveSeconds="600" eternal="false" overflowToDisk="true" />
+	<cache name="authorization" maxElementsInMemory="1000000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="jwtShiro" maxElementsInMemory="1000000" timeToIdleSeconds="3600" timeToLiveSeconds="86400" eternal="false" overflowToDisk="true" />
+	<cache name="failedLoginAttempts" maxElementsInMemory="1000000" eternal="true" overflowToDisk="true" />
+
+</ehcache>

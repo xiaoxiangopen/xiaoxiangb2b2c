@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.AftersalesRepairDao">
+	
+	<!-- 售后基类 -->
+	<resultMap id="AftersalesResultMap" type="net.xiaoxiangshop.entity.Aftersales">
+		<result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="delivery_corp" property="deliveryCorp" />
+        <result column="delivery_corp_code" property="deliveryCorpCode" />
+        <result column="reason" property="reason" />
+        <result column="type" property="type" />
+        <result column="status" property="status" />
+        <result column="tracking_no" property="trackingNo" />
+        <association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+        <collection property="aftersalesItems" select="net.xiaoxiangshop.dao.AftersalesItemDao.findSet" column="{attributeName=aftersales_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.AftersalesItem" fetchType="lazy"/>
+	</resultMap>
+	
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.AftersalesRepair" extends="AftersalesResultMap">
+    	<result column="consignee" property="consignee" />
+    	<result column="area" property="area" />
+    	<result column="address" property="address" />
+    	<result column="phone" property="phone" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        type, created_date, last_modified_date, delivery_corp, delivery_corp_code, reason, status, tracking_no, address, area, consignee, phone, member_id, store_id, 'aftersales_id'
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`aftersales`
+		WHERE
+			`type` = 0
+		AND `id` = #{id}
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.AftersalesRepair">
+    	INSERT INTO aftersales(
+			id ,
+			type ,
+			created_date ,
+			version ,
+			delivery_corp ,
+			delivery_corp_code ,
+			`status` ,
+			tracking_no ,
+			address ,
+			area ,
+			consignee ,
+			phone ,
+			member_id ,
+			store_id ,
+			reason
+		) VALUES (
+			#{entity.id}, 
+			0, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.deliveryCorp}, 
+			#{entity.deliveryCorpCode}, 
+			#{entity.status}, 
+			#{entity.trackingNo}, 
+			#{entity.address}, 
+			#{entity.area}, 
+			#{entity.consignee}, 
+			#{entity.phone}, 
+			#{entity.member.id}, 
+			#{entity.store.id}, 
+			#{entity.reason}
+		)
+  	</insert>
+	
+</mapper>

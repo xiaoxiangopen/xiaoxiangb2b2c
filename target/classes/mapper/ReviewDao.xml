@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ReviewDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Review">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="content" property="content" />
+        <result column="ip" property="ip" />
+        <result column="is_show" property="isShow" />
+        <result column="score" property="score" />
+        <result column="specifications" property="specifications" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.SpecificationConverter" />
+		<association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+		<association property="product" select="net.xiaoxiangshop.dao.ProductDao.find" column="product_id" javaType="net.xiaoxiangshop.entity.Product" fetchType="lazy"/>
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+        <association property="forReview" select="find" column="for_review_id"  javaType="net.xiaoxiangshop.entity.Review" fetchType="lazy"/>
+        <collection property="replyReviews" select="findSet" column="{attributeName=forReviewId, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Review" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, content, ip, is_show, score, specifications, for_review_id, member_id, product_id, store_id, 'forReviewId'
+    </sql>
+
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			review 
+		WHERE id = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`review`
+		<where>
+			<choose>
+		  		<when test="attributeName == 'forReviewId'">
+					for_review_id = #{attributeValue}
+		  		</when>
+		  		<otherwise>
+					${attributeName} = #{attributeValue}
+		  		</otherwise>
+		  	</choose>
+		</where>
+		ORDER BY
+			created_date DESC
+	</select>
+	
+	<!-- 查找文章 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			review
+		WHERE
+			for_review_id IS NULL
+		<if test="member != null">
+		  	AND member_id = #{member.id}
+		</if>
+		<if test="product != null">
+		  	AND product_id = #{product.id}
+		</if>
+		<if test="isShow">
+		  	AND is_show = #{isShow}
+		</if>
+		<if test="type != null">
+		  <choose>
+		  	<when test="type.name == 'positive'">
+		  		AND score <![CDATA[ >= ]]> 4
+		  	</when>
+		  	<when test="type.name == 'moderate'">
+		  		AND score <![CDATA[ = ]]> 3
+		  	</when>
+		  	<when test="type.name == 'negative'">
+		  		AND score <![CDATA[ <= ]]> 2
+		  	</when>
+		  </choose>
+		</if>
+	</select>
+	
+	<!-- 查找评论分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			review
+		WHERE
+			for_review_id IS NULL
+		<if test="member != null">
+		  	AND member_id = #{member.id}
+		</if>
+		<if test="product != null">
+		  	AND product_id = #{product.id}
+		</if>
+		<if test="isShow">
+		  	AND is_show = #{isShow}
+		</if>
+		<if test="store">
+		  	AND store_id = #{store.id}
+		</if>
+		<if test="type != null">
+		  <choose>
+		  	<when test="type.name == 'POSITIVE'">
+		  		AND score <![CDATA[ >= ]]> 4
+		  	</when>
+		  	<when test="type.name == 'MODERATE'">
+		  		AND score <![CDATA[ = ]]> 3
+		  	</when>
+		  	<when test="type.name == 'NEGATIVE'">
+		  		AND score <![CDATA[ <= ]]> 2
+		  	</when>
+		  </choose>
+		</if>
+		<if test="ew.nonEmptyOfWhere == true">
+			AND
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查找评论数量 -->
+	<select id="count" resultType="long">
+		SELECT
+			count(*)
+		FROM
+			`review`
+		WHERE 
+			for_review_id IS NULL
+		<if test="member != null">
+			AND member_id = #{member.id}
+		</if>
+		<if test="product != null">
+		  	AND product_id = #{product.id}
+		</if>
+		<if test="isShow">
+		  	AND is_show = #{isShow}
+		</if>
+		<if test="type != null">
+			<choose>
+		  		<when test="type.name == 'positive'">
+		  			AND score <![CDATA[ >= ]]> 4
+		  		</when>
+		  		<when test="type.name == 'moderate'">
+		  			AND score <![CDATA[ = ]]> 3
+		  		</when>
+		  		<when test="type.name == 'negative'">
+		  			AND score <![CDATA[ <= ]]> 2
+		  		</when>
+			 </choose>
+		</if>
+	</select>
+	
+	<!-- 计算商品总评分 -->
+	<select id="calculateTotalScore" resultType="long">
+		SELECT
+			IFNULL(sum(score), 0)
+		FROM
+			review
+		WHERE
+			product_id = #{product.id}
+		AND is_show = true
+		AND for_review_id IS NULL
+	</select>
+	
+	<!-- 计算商品评分次数 -->
+	<select id="calculateScoreCount" resultType="long">
+		SELECT
+			IFNULL(count(*), 0)
+		FROM
+			review
+		WHERE
+			product_id = #{product.id}
+		AND is_show = true
+		AND for_review_id IS NULL
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Review">
+		INSERT INTO review(
+			id ,
+			created_date ,
+			version ,
+			content ,
+			ip ,
+			is_show ,
+			score ,
+			specifications ,
+			for_review_id ,
+			member_id ,
+			product_id ,
+			store_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.content}, 
+			#{entity.ip}, 
+			#{entity.isShow}, 
+			#{entity.score}, 
+			#{entity.specifications, typeHandler=net.xiaoxiangshop.handlers.SpecificationConverter},
+			#{entity.forReview.id}, 
+			#{entity.member.id}, 
+			#{entity.product.id}, 
+			#{entity.store.id}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.Review">
+   		UPDATE review
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			content = #{entity.content},
+			is_show = #{entity.isShow},
+			score = #{entity.score},
+			for_review_id = #{entity.forReview.id}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  
+</mapper>

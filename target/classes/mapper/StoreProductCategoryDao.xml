@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.StoreProductCategoryDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.StoreProductCategory">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="orders" property="order" />
+        <result column="grade" property="grade" />
+        <result column="name" property="name" />
+        <result column="tree_path" property="treePath" />
+        <association property="parent" select="find" column="parent_id" javaType="net.xiaoxiangshop.entity.StoreProductCategory" fetchType="lazy"/>
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+        <collection property="children" select="findSet" column="{attributeName=parentId, attributeValue=id}" ofType="net.xiaoxiangshop.entity.StoreProductCategory" fetchType="lazy"/>
+        <collection property="products" select="net.xiaoxiangshop.dao.ProductDao.findSet" column="{attributeName=store_product_category_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Product" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, orders, grade, name, tree_path, parent_id, store_id, 'parentId', 'store_product_category_id'
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`store_product_category`
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`store_product_category`
+		<choose>
+			<when test="attributeName == 'parentId'">
+				WHERE
+					parent_id = #{attributeValue}
+			</when>
+			<otherwise>
+				WHERE
+					${attributeName} = #{attributeValue}
+			</otherwise>
+		</choose>
+		ORDER BY
+			`orders` ASC
+	</select>
+	
+	<!-- 查找顶级店铺商品分类 -->
+	<select id="findRoots" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			store_product_category
+		WHERE
+			store_id = #{store.id}
+		AND parent_id IS NULL
+		ORDER BY
+			orders ASC
+		<if test="count != null">
+			LIMIT 0, ${count}
+		</if>
+	</select>
+	
+	<!-- 查找下级店铺商品分类 -->
+	<select id="findChildren" resultMap="BaseResultMap" >
+		<if test="recursive == true">
+			<if test="storeProductCategory != null">
+				SELECT
+					<include refid="Base_Column_List"></include>
+				FROM
+					`store_product_category`
+				WHERE
+					store_id = #{store.id}
+				AND tree_path LIKE concat('%,', #{storeProductCategory.id}, ',%')
+				ORDER BY
+					grade ASC
+				<if test="count != null">
+					LIMIT 0, ${count}
+				</if>
+			</if>
+			<if test="storeProductCategory == null">
+				SELECT
+					<include refid="Base_Column_List"></include>
+				FROM
+					`store_product_category`
+				WHERE
+					store_id = #{store.id}
+				ORDER BY
+					grade ASC
+			</if>
+		</if>
+		<if test="recursive == false">
+			SELECT
+				<include refid="Base_Column_List"></include>
+			FROM
+				`store_product_category`
+			WHERE
+				parent_id = #{storeProductCategory.parent.id}
+			AND store_id = #{store.id}
+			ORDER BY
+				orders ASC
+			<if test="count != null">
+				LIMIT 0, ${count}
+			</if>
+		</if>
+	</select>
+	
+	<!-- 查找店铺商品分类 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`store_product_category`
+		<where>
+			<if test="store != null">
+				store_id = #{store.id}
+			</if>
+			<if test="ew.nonEmptyOfWhere == true">
+				AND
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.StoreProductCategory">
+    	INSERT INTO store_product_category(
+			id ,
+			created_date ,
+			version ,
+			orders ,
+			grade ,
+			`name` ,
+			tree_path ,
+			parent_id ,
+			store_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.order}, 
+			#{entity.grade}, 
+			#{entity.name}, 
+			#{entity.treePath}, 
+			#{entity.parent.id}, 
+			#{entity.store.id}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.StoreProductCategory">
+    	UPDATE store_product_category
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			orders = #{entity.order},
+			grade = #{entity.grade},
+			`name` = #{entity.name},
+			tree_path = #{entity.treePath},
+			parent_id = #{entity.parent.id},
+			store_id = #{entity.store.id}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  
+</mapper>

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ArticleCategoryDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.ArticleCategory">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="orders" property="order" />
+        <result column="grade" property="grade" />
+        <result column="name" property="name" />
+        <result column="seo_description" property="seoDescription" />
+        <result column="seo_keywords" property="seoKeywords" />
+        <result column="seo_title" property="seoTitle" />
+        <result column="tree_path" property="treePath" />
+        <association property="parent" select="find" column="parent_id"  javaType="net.xiaoxiangshop.entity.ArticleCategory" fetchType="lazy"/>
+        <collection property="children" select="findSet" column="{attributeValue=id}" ofType="net.xiaoxiangshop.entity.ArticleCategory" fetchType="lazy"/>
+        <collection property="articles" select="net.xiaoxiangshop.dao.ArticleDao.findSet" column="{attributeName=article_category_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Article" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, orders, grade, name, seo_description, seo_keywords, seo_title, tree_path, parent_id, 'article_category_id'
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			article_category
+		WHERE
+			id = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			article_category
+		WHERE
+			parent_id = #{attributeValue}
+	</select>
+	
+	<!-- 查找顶级文章分类 -->
+	<select id="findRoots" parameterType="int" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			article_category
+		WHERE
+			parent_id IS NULL
+		ORDER BY
+			orders ASC
+		<if test="count != null">
+			LIMIT 0, #{count}
+		</if>
+	</select>
+	
+	<!-- 查找上级文章分类 -->
+	<select id="findParents" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			article_category
+		<if test="recursive == true">
+				WHERE id IN 
+			<if test="articleCategory.parentIds.length != 0">
+		        <foreach collection="articleCategory.parentIds" item="ids" open="(" separator="," close=")" >
+		        	#{ids}
+		        </foreach>
+			</if>
+			<if test="articleCategory.parentIds.length == 0">
+				('')
+			</if>
+		    ORDER BY grade ASC
+	    </if>
+	    <if test="recursive == false">
+	    	WHERE id = #{articleCategory.parent.id}
+	    </if>
+	    <if test="count != null">
+			LIMIT 0, #{count}
+		</if>
+	</select>
+	
+	<!-- 查找下级文章分类 -->
+	<select id="findChildren" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			article_category
+		<if test="recursive == true">
+			<if test="articleCategory != null">
+				WHERE tree_path LIKE concat('%,',#{articleCategory.id},',%') ORDER BY grade ASC, orders ASC
+	        </if>
+	        <if test="articleCategory == null">
+				ORDER BY grade ASC, orders ASC
+	        </if>
+	    </if>
+	    <if test="recursive == false">
+	    	WHERE parent_id = #{articleCategory.id} ORDER BY orders ASC
+	    </if>
+	    <if test="count != null">
+			LIMIT 0, #{count}
+		</if>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.ArticleCategory">
+    	INSERT INTO article_category(
+			id ,
+			created_date ,
+			version ,
+			orders ,
+			grade ,
+			`name` ,
+			seo_description ,
+			seo_keywords ,
+			seo_title ,
+			tree_path ,
+			parent_id
+		)
+		VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.order}, 
+			#{entity.grade}, 
+			#{entity.name}, 
+			#{entity.seoDescription}, 
+			#{entity.seoKeywords}, 
+			#{entity.seoTitle}, 
+			#{entity.treePath}, 
+			#{entity.parent.id}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.ArticleCategory">
+    	UPDATE article_category
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			orders = #{entity.order},
+			grade = #{entity.grade},
+			`name` = #{entity.name},
+			seo_description = #{entity.seoDescription},
+			seo_keywords = #{entity.seoKeywords},
+			seo_title = #{entity.seoTitle},
+			tree_path = #{entity.treePath},
+			parent_id = #{entity.parent.id}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  	
+</mapper>

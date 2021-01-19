@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.CartDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Cart">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="expire" property="expire" />
+        <result column="cart_key" property="key" />
+        <association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+        <collection property="cartItems" select="net.xiaoxiangshop.dao.CartItemDao.findSet" column="{attributeName=cart_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.CartItem" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, expire, cart_key, member_id, 'cart_id'
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`cart` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 根据属性查找实体对象 -->
+	<select id="findByAttribute" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`cart`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 移除 -->
+	<update id="remove">
+		DELETE FROM cart_item WHERE cart_id IN (SELECT id FROM cart WHERE id = #{entity.id});
+		DELETE FROM cart WHERE id = #{entity.id}
+	</update>
+	
+	<!-- 删除过期购物车 -->
+	<update id="deleteExpired">
+		DELETE FROM cart_item WHERE cart_id IN (SELECT id FROM cart WHERE expire IS NOT NULL AND expire <![CDATA[ <= ]]> NOW());
+		DELETE FROM cart WHERE expire IS NOT NULL AND expire <![CDATA[ <= ]]> NOW()
+	</update>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Cart">
+    	INSERT INTO cart(
+			id ,
+			created_date ,
+			version ,
+			expire ,
+			cart_key ,
+			member_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.expire}, 
+			#{entity.key}, 
+			#{entity.member.id}
+		)
+  	</insert>
+
+
+	<!-- 根据属性查找实体对象 -->
+	<select id="findCartByUserId" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM
+		`cart`
+		WHERE
+		member_id = #{member.id}
+	</select>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="net.xiaoxiangshop.entity.Cart">
+		UPDATE cart
+		SET last_modified_date = #{entity.lastModifiedDate},
+		version = #{entity.version} + 1,
+		member_id=#{entity.member.id}
+		WHERE
+		id = #{entity.id}
+		AND version = #{entity.version}
+	</update>
+
+</mapper>

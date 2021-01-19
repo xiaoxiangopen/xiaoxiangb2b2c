@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ErpResultDao">
+
+
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.ErpResult" >
+    	INSERT INTO erp_result(
+			id ,
+			erp_type ,
+			send_time ,
+			send_text ,
+			resul_time ,
+			result_text ,
+			result_code,
+			order_sn
+		)
+		VALUES (
+			#{entity.id}, 
+			#{entity.erpType},
+			#{entity.sendTime},
+			#{entity.sendText},
+			#{entity.resultTime},
+			#{entity.resultText},
+			#{entity.resultCode},
+			#{entity.orderSn}
+		)
+ 	</insert>
+
+</mapper>

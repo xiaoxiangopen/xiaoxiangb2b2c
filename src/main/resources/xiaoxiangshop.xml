@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xiaoxiangshop>
+	<setting name="siteName" value="小象电商--小象电商" />
+	<!--	<setting name="siteUrl" value="https://newmall.cgzfs.com/" />-->
+	<!--	<setting name="siteUrl" value="https://test003.cgzfs.com/" />-->
+	<setting name="siteUrl" value="http://localhost:8080/" />
+	<setting name="logo" value="/resources/common/images/logo.png" />
+	<!--h5端logo-->
+	<setting name="mobilelogo" value="/upload/image/mobilelogo.png" />
+	<setting name="hotSearch" value="超市,奶粉,iphone,美的,华为,香水,时尚,苹果,婴儿,巧克力,九阳,联想,戴森,虎牌,乐高,松下,西门子" />
+	<setting name="address" value="深圳市越秀区环市东路369号" />
+	<setting name="phone" value="020-00000000" />
+	<setting name="zipCode" value="510000" />
+	<setting name="email" value="xxx@cgzfs.com" />
+	<setting name="certtext" value="粤ICP备：B2-00000000" />
+	<setting name="largeProductImageWidth" value="800" />
+	<setting name="largeProductImageHeight" value="800" />
+	<setting name="mediumProductImageWidth" value="300" />
+	<setting name="mediumProductImageHeight" value="300" />
+	<setting name="thumbnailProductImageWidth" value="170" />
+	<setting name="thumbnailProductImageHeight" value="170" />
+	<setting name="defaultLargeProductImage" value="/upload/image/default_large.jpg" />
+	<setting name="defaultMediumProductImage" value="/upload/image/default_medium.jpg" />
+	<setting name="defaultThumbnailProductImage" value="/upload/image/default_thumbnail.jpg" />
+	<setting name="defaultStoreLogo" value="/upload/image/default_store_logo.jpg" />
+	<setting name="watermarkAlpha" value="50" />
+	<setting name="watermarkImage" value="/upload/image/watermark.png" />
+	<setting name="watermarkPosition" value="CENTER" />
+	<setting name="priceScale" value="2" />
+	<setting name="priceRoundType" value="ROUND_HALF_UP" />
+	<setting name="isShowMarketPrice" value="true" />
+	<setting name="defaultMarketPriceScale" value="1" />
+	<setting name="allowedRegisterTypes" value="MEMBER" />
+	<setting name="registerPoint" value="0" />
+	<setting name="captchaTypes" value="MEMBER_LOGIN,MEMBER_REGISTER,BUSINESS_LOGIN,BUSINESS_REGISTER,ADMIN_LOGIN,REVIEW,CONSULTATION,FORGOT_PASSWORD,RESET_PASSWORD,OTHER" />
+	<setting name="maxFailedLoginAttempts" value="5" />
+	<setting name="passwordLockTime" value="10" />
+	<setting name="safeKeyExpiryTime" value="144000" />
+	<setting name="uploadMaxSize" value="20" />
+	<setting name="uploadImageExtension" value="jpg,jpeg,bmp,gif,png" />
+	<setting name="uploadMediaExtension" value="swf,flv,mp3,wav,avi,rm,rmvb" />
+	<setting name="uploadFileExtension" value="zip,rar,7z,doc,docx,xls,xlsx,ppt,pptx" />
+	<setting name="imageUploadPath" value="/upload/image/${.now?string('yyyyMM')}/" />
+	<setting name="mediaUploadPath" value="/upload/media/${.now?string('yyyyMM')}/" />
+	<setting name="fileUploadPath" value="/upload/file/${.now?string('yyyyMM')}/" />
+	<setting name="smtpHost" value="xxx" />
+	<setting name="smtpPort" value="25" />
+	<setting name="smtpUsername" value="xxx" />
+	<setting name="smtpPassword" value="xxxxxxx" />
+	<setting name="smtpSSLEnabled" value="false" />
+	<setting name="smtpFromMail" value="xxx" />
+	<setting name="currencySign" value="￥" />
+	<setting name="currencyUnit" value="元" />
+	<setting name="stockAlertCount" value="5" />
+	<setting name="automaticReceiveTime" value="7" />
+	<setting name="stockAllocationTime" value="PAYMENT" />
+	<setting name="defaultPointScale" value="0" />
+	<setting name="maxPointScale" value="1" />
+	<setting name="memberMinimumCashAmount" value="1" />
+	<setting name="businessMinimumCashAmount" value="1" />
+	<setting name="distributionCommissionRates" value="50,30,20" />
+	<setting name="isDevelopmentEnabled" value="false" />
+	<setting name="isReviewEnabled" value="true" />
+	<setting name="isReviewCheck" value="true" />
+	<setting name="isConsultationEnabled" value="true" />
+	<setting name="isConsultationCheck" value="true" />
+	<setting name="isInvoiceEnabled" value="true" />
+	<setting name="isTaxPriceEnabled" value="false" />
+	<setting name="taxRate" value="0" />
+	<setting name="cookiePath" value="/" />
+	<setting name="cookieDomain" value="" />
+	<setting name="kuaidi100Customer" value="6D6269F8633A1957EF1EE20A09531FAF" />
+	<setting name="kuaidi100Key" value="SrOMpYaJ3330" />
+	<setting name="isCnzzEnabled" value="false" />
+	<setting name="cnzzSiteId" value="" />
+	<setting name="cnzzPassword" value="" />
+	<setting name="smsAppId" value="SendSMS_gzyouyi" />
+	<setting name="smsSecretKey" value="gzyouyi@2017" />
+	<setting name="youyiSmsUrl" value="http://121.40.16.43" />
+	<!--会员绑定短信相关配置-->
+	<!--会员绑定验证码短信模板-->
+	<setting name="youyiHySmsTemplate" value="验证码为:code，欢迎使用小象电商网乐购商城会员卡绑定服务。" />
+	<!--登陆手机验证码短信模板-->
+	<setting name="youyiLoginSmsTemplate" value="验证码为code，欢迎访问小象电商官方购物网站。" />
+	<!--修改密码手机验证码短信模板-->
+	<setting name="youyiEditPwdSmsTemplate" value="验证码为code,欢迎使用小象电商网乐购商城修改密码服务。" />
+
+	<!--验证码有效时间(秒)-->
+	<setting name="youyiHySmsCodeTime" value="120" />
+	<setting name="locale" value="zh_CN" />
+	<!--订单导出狐表，商品分类与专柜名称映射关系相关配置 being -->
+	<setting name="zgdmCScategoryCode" value=",5147,2275,5089," />
+	<setting name="zgdmCScategorySubCode" value=",5087,5209,5215," />
+	<setting name="zgdmCScategoryName" value="超市" />
+	<!--订单导出狐表，商品分类与专柜名称映射关系相关配置 end -->
+	<templateConfig id="header" type="PAGE" name="头部" templatePath="shop/include/main_header.ftl" />
+	<templateConfig id="footer" type="PAGE" name="底部" templatePath="shop/include/main_footer.ftl" />
+	<templateConfig id="login" type="PAGE" name="登录" templatePath="member/login/index.ftl" />
+	<templateConfig id="register" type="PAGE" name="注册" templatePath="member/register/index.ftl" />
+	<templateConfig id="index" type="PAGE" name="首页" templatePath="shop/index.ftl" />
+	<templateConfig id="articleList" type="PAGE" name="文章列表" templatePath="shop/article/list.ftl" />
+	<templateConfig id="articleSearch" type="PAGE" name="文章搜索" templatePath="shop/article/search.ftl" />
+	<templateConfig id="articleDetail" type="PAGE" name="文章详情" templatePath="shop/article/detail.ftl" />
+	<templateConfig id="productList" type="PAGE" name="商品列表" templatePath="shop/product/list.ftl" />
+	<templateConfig id="productSearch" type="PAGE" name="商品搜索" templatePath="shop/product/search.ftl" />
+	<templateConfig id="productDetail" type="PAGE" name="商品详情" templatePath="shop/product/detail.ftl" />
+	<templateConfig id="brandList" type="PAGE" name="品牌列表" templatePath="shop/brand/list.ftl" />
+	<templateConfig id="brandDetail" type="PAGE" name="品牌详情" templatePath="shop/brand/detail.ftl" />
+	<templateConfig id="productCategory" type="PAGE" name="商品分类" templatePath="shop/product_category/index.ftl" />
+	<templateConfig id="friendLink" type="PAGE" name="友情链接" templatePath="shop/friend_link/index.ftl" />
+	<templateConfig id="cart" type="PAGE" name="购物车" templatePath="shop/cart/list.ftl" />
+	<templateConfig id="orderPrint" type="PRINT" name="订单打印" templatePath="admin/print/order.ftl" />
+	<templateConfig id="productPrint" type="PRINT" name="购物单打印" templatePath="business/print/product.ftl" />
+	<templateConfig id="shippingPrint" type="PRINT" name="发货单打印" templatePath="business/print/shipping.ftl" />
+	<templateConfig id="testSmtpMail" type="MAIL" name="SMTP测试" templatePath="admin/mail/test_smtp.ftl" />
+	<templateConfig id="forgotPasswordMail" type="MAIL" name="忘记密码" templatePath="shop/mail/forgot_password.ftl" />
+	<templateConfig id="productNotifyMail" type="MAIL" name="到货通知" templatePath="shop/mail/product_notify.ftl" />
+	<templateConfig id="registerMemberMail" type="MAIL" name="会员注册" templatePath="shop/mail/register_member.ftl" />
+	<templateConfig id="createOrderMail" type="MAIL" name="订单创建" templatePath="shop/mail/create_order.ftl" />
+	<templateConfig id="updateOrderMail" type="MAIL" name="订单更新" templatePath="shop/mail/update_order.ftl" />
+	<templateConfig id="cancelOrderMail" type="MAIL" name="订单取消" templatePath="shop/mail/cancel_order.ftl" />
+	<templateConfig id="reviewOrderMail" type="MAIL" name="订单审核" templatePath="shop/mail/review_order.ftl" />
+	<templateConfig id="paymentOrderMail" type="MAIL" name="订单收款" templatePath="shop/mail/payment_order.ftl" />
+	<templateConfig id="refundsOrderMail" type="MAIL" name="订单退款" templatePath="shop/mail/refunds_order.ftl" />
+	<templateConfig id="shippingOrderMail" type="MAIL" name="订单发货" templatePath="shop/mail/shipping_order.ftl" />
+	<templateConfig id="returnsOrderMail" type="MAIL" name="订单退货" templatePath="shop/mail/returns_order.ftl" />
+	<templateConfig id="receiveOrderMail" type="MAIL" name="订单收货" templatePath="shop/mail/receive_order.ftl" />
+	<templateConfig id="completeOrderMail" type="MAIL" name="订单完成" templatePath="shop/mail/complete_order.ftl" />
+	<templateConfig id="failOrderMail" type="MAIL" name="订单失败" templatePath="shop/mail/fail_order.ftl" />
+	<templateConfig id="registerBusinessMail" type="MAIL" name="商家注册" templatePath="shop/mail/register_business.ftl" />
+	<templateConfig id="approvalStoreMail" type="MAIL" name="店铺审核成功" templatePath="shop/mail/approval_store.ftl" />
+	<templateConfig id="failStoreMail" type="MAIL" name="店铺审核失败" templatePath="shop/mail/fail_store.ftl" />
+	<templateConfig id="registerMemberSms" type="SMS" name="会员注册" templatePath="shop/sms/register_member.ftl" />
+	<templateConfig id="createOrderSms" type="SMS" name="订单创建" templatePath="shop/sms/create_order.ftl" />
+	<templateConfig id="updateOrderSms" type="SMS" name="订单更新" templatePath="shop/sms/update_order.ftl" />
+	<templateConfig id="cancelOrderSms" type="SMS" name="订单取消" templatePath="shop/sms/cancel_order.ftl" />
+	<templateConfig id="reviewOrderSms" type="SMS" name="订单审核" templatePath="shop/sms/review_order.ftl" />
+	<templateConfig id="paymentOrderSms" type="SMS" name="订单收款" templatePath="shop/sms/payment_order.ftl" />
+	<templateConfig id="refundsOrderSms" type="SMS" name="订单退款" templatePath="shop/sms/refunds_order.ftl" />
+	<templateConfig id="shippingOrderSms" type="SMS" name="订单发货" templatePath="shop/sms/shipping_order.ftl" />
+	<templateConfig id="returnsOrderSms" type="SMS" name="订单退货" templatePath="shop/sms/returns_order.ftl" />
+	<templateConfig id="receiveOrderSms" type="SMS" name="订单收货" templatePath="shop/sms/receive_order.ftl" />
+	<templateConfig id="completeOrderSms" type="SMS" name="订单完成" templatePath="shop/sms/complete_order.ftl" />
+	<templateConfig id="failOrderSms" type="SMS" name="订单失败" templatePath="shop/sms/fail_order.ftl" />
+	<templateConfig id="registerBusinessSms" type="SMS" name="商家注册" templatePath="shop/sms/register_business.ftl" />
+	<templateConfig id="approvalStoreSms" type="SMS" name="店铺审核成功" templatePath="shop/sms/approval_store.ftl" />
+	<templateConfig id="failStoreSms" type="SMS" name="店铺审核失败" templatePath="shop/sms/fail_store.ftl" />
+
+</xiaoxiangshop>

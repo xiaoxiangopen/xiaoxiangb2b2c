@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.DictDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Dict">
+        <result column="dict_id" property="dictId" />
+        <result column="dict_type" property="dictType" />
+        <result column="dict_name" property="dictName" />
+        <result column="dict_value" property="dictValue" />
+		<result column="sort" property="sort" />
+     </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        t.dict_id,
+		t.dict_type,
+		t.dict_name,
+		t.dict_value,
+		t.sort
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="net.xiaoxiangshop.entity.Dict" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			dict t
+		WHERE
+			t.dict_type = #{dict.dictType}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			dict t
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.RoleDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Role">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="description" property="description" />
+        <result column="is_system" property="isSystem" />
+        <result column="name" property="name" />
+        <result column="permissions" property="permissions" jdbcType="LONGVARCHAR"
+					javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.PermissionConverter" />
+		<collection property="admins" select="net.xiaoxiangshop.dao.AdminDao.findSet" column="{attributeName=role_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Admin" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, description, is_system, name, permissions, 'role_id'
+    </sql>
+
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			role
+		WHERE
+			id = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`role` role
+		LEFT JOIN `users_role` ar ON ar.`roles_id` = role.`id`
+		WHERE
+			ar.admins_id = #{attributeValue}
+	</select>
+	
+	<!-- 查找所有实体对象集合 -->
+	<select id="findAll" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`role` 
+	</select>
+	
+	<!-- 保存实体对象 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Role">
+    	INSERT INTO role (
+			id ,
+			created_date ,
+			version ,
+			description ,
+			is_system ,
+			name ,
+			permissions
+		) 
+		VALUES (
+			#{entity.id} , 
+			#{entity.createdDate},
+			#{entity.version}, 
+			#{entity.description} , 
+			#{entity.isSystem} , 
+			#{entity.name} , 
+			#{entity.permissions, typeHandler=net.xiaoxiangshop.handlers.PermissionConverter}
+		)
+	 </insert>
+	 
+	 <!-- 更新实体对象 -->
+  	 <update id="update" parameterType="net.xiaoxiangshop.entity.Role">
+	    UPDATE role
+	    SET
+	        last_modified_date = #{entity.lastModifiedDate},
+	        version = #{entity.version} + 1,
+	        description = #{entity.description} , 
+	        is_system = #{entity.isSystem} , 
+	        name = #{entity.name} , 
+	        permissions = #{entity.permissions, typeHandler=net.xiaoxiangshop.handlers.PermissionConverter}
+	    WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+	 </update>
+	 
+</mapper>

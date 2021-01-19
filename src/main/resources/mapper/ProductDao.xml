@@ -1,0 +1,958 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ProductDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Product">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="attribute_value0" property="attributeValue0" />
+        <result column="attribute_value1" property="attributeValue1" />
+        <result column="attribute_value10" property="attributeValue10" />
+        <result column="attribute_value11" property="attributeValue11" />
+        <result column="attribute_value12" property="attributeValue12" />
+        <result column="attribute_value13" property="attributeValue13" />
+        <result column="attribute_value14" property="attributeValue14" />
+        <result column="attribute_value15" property="attributeValue15" />
+        <result column="attribute_value16" property="attributeValue16" />
+        <result column="attribute_value17" property="attributeValue17" />
+        <result column="attribute_value18" property="attributeValue18" />
+        <result column="attribute_value19" property="attributeValue19" />
+        <result column="attribute_value2" property="attributeValue2" />
+        <result column="attribute_value3" property="attributeValue3" />
+        <result column="attribute_value4" property="attributeValue4" />
+        <result column="attribute_value5" property="attributeValue5" />
+        <result column="attribute_value6" property="attributeValue6" />
+        <result column="attribute_value7" property="attributeValue7" />
+        <result column="attribute_value8" property="attributeValue8" />
+        <result column="attribute_value9" property="attributeValue9" />
+        <result column="caption" property="caption" />
+        <result column="cost" property="cost" />
+        <result column="hits" property="hits" />
+        <result column="introduction" property="introduction" />
+        <result column="is_active" property="isActive" />
+        <result column="is_delivery" property="isDelivery" />
+        <result column="is_list" property="isList" />
+        <result column="is_marketable" property="isMarketable" />
+        <result column="is_top" property="isTop" />
+        <result column="keyword" property="keyword" />
+        <result column="market_price" property="marketPrice" />
+        <result column="max_commission" property="maxCommission" />
+        <result column="memo" property="memo" />
+        <result column="month_hits" property="monthHits" />
+        <result column="month_hits_date" property="monthHitsDate" />
+        <result column="month_sales" property="monthSales" />
+        <result column="month_sales_date" property="monthSalesDate" />
+        <result column="name" property="name" />
+        <result column="parameter_values" property="parameterValues" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.ParameterValueHandler"/>
+        <result column="price" property="price" />
+        <result column="product_images" property="productImages" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.ProductImageHandler" />
+        <result column="sales" property="sales" />
+        <result column="score" property="score" />
+        <result column="score_count" property="scoreCount" />
+        <result column="sn" property="sn" />
+        <result column="specification_items" property="specificationItems" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.SpecificationItemConverter"/>
+        <result column="total_score" property="totalScore" />
+        <result column="type" property="type" />
+        <result column="unit" property="unit" />
+        <result column="week_hits" property="weekHits" />
+        <result column="week_hits_date" property="weekHitsDate" />
+        <result column="week_sales" property="weekSales" />
+        <result column="week_sales_date" property="weekSalesDate" />
+        <result column="weight" property="weight" />
+		<result column="internal_number" property="internalNumber" />
+		<result column="is_pro" property="isPro" />
+		<result column="erp_flag" property="erpFlag" />
+		<result column="counter_no" property="counterNo" />
+		<result column="counter_name" property="counterName" />
+		<result column="business_id" property="businessId" />
+		<result column="business_name" property="businessName" />
+		<result column="note_ids" property="noteIds" />
+		<result column="begin_date" property="beginDate" />
+		<result column="end_date" property="endDate" />
+		<result column="store_no" property="storeNo" />
+		<result column="is_area_lock" property="isAreaLock" />
+		<result column="area_ids" property="areaIds" />
+		<result column="sync_time" property="syncTime" />
+		<result column="sync_flag" property="syncFlag" />
+		<result column="more_freight" property="moreFreight" />
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+        <association property="productCategory" select="net.xiaoxiangshop.dao.ProductCategoryDao.find" column="product_category_id"  javaType="net.xiaoxiangshop.entity.ProductCategory" fetchType="lazy"/>
+        <association property="storeProductCategory" select="net.xiaoxiangshop.dao.StoreProductCategoryDao.find" column="store_product_category_id" javaType="net.xiaoxiangshop.entity.StoreProductCategory" fetchType="lazy"/>
+        <association property="brand" select="net.xiaoxiangshop.dao.BrandDao.find" column="brand_id"  javaType="net.xiaoxiangshop.entity.Brand" fetchType="lazy"/>
+        <collection property="productTags" select="net.xiaoxiangshop.dao.ProductTagDao.findSet" column="{attributeValue=id}" ofType="net.xiaoxiangshop.entity.ProductTag" />
+        <collection property="storeProductTags" select="net.xiaoxiangshop.dao.StoreProductTagDao.findSet" column="{attributeName=product_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.StoreProductTag" />
+        <collection property="reviews" select="net.xiaoxiangshop.dao.ReviewDao.findSet" column="{attributeName=product_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Review" />
+        <collection property="consultations" select="net.xiaoxiangshop.dao.ConsultationDao.findSet" column="{attributeName=product_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Consultation" />
+        <collection property="productFavorites" select="net.xiaoxiangshop.dao.ProductFavoriteDao.findSet" column="{attributeName=product_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.ProductFavorite" />
+        <collection property="skus" select="net.xiaoxiangshop.dao.SkuDao.findSet" column="{attributeName=product_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Sku" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        product.id,
+        product.version,
+        product.created_date, product.last_modified_date, attribute_value0, attribute_value1, attribute_value10, attribute_value11, attribute_value12, attribute_value13,
+        attribute_value14, attribute_value15, attribute_value16, attribute_value17, attribute_value18, attribute_value19, attribute_value2, attribute_value3, attribute_value4,
+        attribute_value5, attribute_value6, attribute_value7, attribute_value8, attribute_value9, caption, cost, hits, product.introduction, is_active, is_delivery, is_list,
+        is_marketable, is_top, product.keyword, market_price, max_commission, product.memo, month_hits, month_hits_date, month_sales, month_sales_date, product.name,
+        parameter_values, price, product_images, sales, score, score_count, sn, specification_items, total_score, product.type, unit, week_hits, week_hits_date, week_sales,
+        week_sales_date, weight, brand_id, product_category_id, product.store_id, store_product_category_id,erp_flag,internal_number,is_pro,counter_no,counter_name,note_ids,
+        product.business_id,product.begin_date,product.end_date,is_area_lock,area_ids,business_name,product.store_no,sync_time,sync_flag,'product_id',more_freight
+
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product` product
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找所有实体对象集合 -->
+	<select id="findAll" resultType="Product">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product` product
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultType="net.xiaoxiangshop.entity.Product">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product` product
+	  	<choose>
+
+	  		<when test="attributeName == 'product_tag_id'">
+	  			LEFT JOIN `product_product_tag` ON id = products_id
+				WHERE
+					product_tags_id = #{attributeValue}
+	  		</when>
+	  		<when test="attributeName == 'store_product_tag_id'">
+	  			LEFT JOIN `product_store_product_tag` ON id = products_id
+				WHERE
+					store_product_tags_id = #{attributeValue}
+	  		</when>
+	  		<when test="attributeName == 'brand_id'">
+				WHERE
+					brand_id = #{attributeValue}
+			</when>
+	  		<otherwise>
+	  			WHERE
+					${attributeName} = #{attributeValue}
+	  		</otherwise>
+	  	</choose>
+	</select>
+	
+	<!-- 查找商品 -->
+	<select id="findByWrapperList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product` product
+
+		<if test="productTag != null">
+			INNER JOIN `product_product_tag` productTags ON product.id = productTags.products_id
+			INNER JOIN `product_tag` productTag ON productTags.product_tags_id = productTag.id
+		</if>
+		<if test="storeProductTag != null">
+			INNER JOIN `product_store_product_tag` storeProduct ON product.id = storeProduct.products_id
+			INNER JOIN `store_product_tag` storeProductTag ON storeProduct.store_product_tags_id = storeProductTag.id
+		</if>
+
+		<where>
+			<if test="type != null">
+				AND product.type = #{type.ordinal}
+			</if>
+			<if test="store != null">
+				AND product.store_id = #{store.id}
+			</if>
+			<if test="productCategory != null">
+				AND product.product_category_id IN (SELECT id FROM product_category WHERE id = #{productCategory.id} OR tree_path LIKE concat('%,',#{productCategory.id},',%'))
+			</if>
+			<if test="storeProductCategory != null">
+				AND product.store_product_category_id IN (SELECT id FROM store_product_category WHERE id = #{storeProductCategory.id} OR tree_path LIKE concat('%,',#{storeProductCategory.id},',%'))
+			</if>
+			<if test="brand != null">
+				AND product.brand_id = #{brand.id}
+			</if>
+
+			<if test="productTag != null">
+				AND productTag.id = #{productTag.id}
+			</if>
+			<if test="storeProductTag != null">
+				AND storeProductTag.id = #{storeProductTag.id}
+			</if>
+			<if test="startPrice != null and startPrice >= 0">
+				AND product.price <![CDATA[ >= ]]> #{startPrice}
+			</if>
+			<if test="endPrice != null and endPrice >= 0">
+				AND product.price <![CDATA[ <= ]]> #{endPrice}
+			</if>
+			<if test="isMarketable != null">
+				AND product.is_marketable = #{isMarketable}
+			</if>
+			<if test="isList != null">
+				AND product.is_list = #{isList}
+			</if>
+			<if test="isTop != null">
+				AND product.is_top = #{isTop}
+			</if>
+			<if test="isActive != null">
+				AND product.is_active = #{isActive}
+			</if>
+			<if test="isOutOfStock != null">
+				<if test="isOutOfStock == true">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ <= ]]> allocated_stock))
+				</if>
+				<if test="isOutOfStock == false">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ > ]]> allocated_stock))
+				</if>
+			</if>
+			<if test="isStockAlert != null">
+				<if test="isStockAlert == true">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ <= ]]> allocated_stock + 5))
+				</if>
+				<if test="isStockAlert == false">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ > ]]> allocated_stock + 5))
+				</if>
+			</if>
+
+			<if test="orderType != null">
+				<choose>
+					<when test="orderType.name == 'topDesc'">
+						ORDER BY is_top, product.created_date DESC
+					</when>
+					<when test="orderType.name == 'priceAsc'">
+						ORDER BY price, product.created_date ASC
+					</when>
+					<when test="orderType.name == 'priceDesc'">
+						ORDER BY price, product.created_date DESC
+					</when>
+					<when test="orderType.name == 'salesDesc'">
+						ORDER BY sales, product.created_date DESC
+					</when>
+					<when test="orderType.name == 'scoreDesc'">
+						ORDER BY score, product.created_date DESC
+					</when>
+					<when test="orderType.name == 'dateDesc'">
+						ORDER BY product.created_date DESC
+					</when>
+				</choose>
+			</if>
+			<if test="ew.nonEmptyOfWhere == true">
+				AND
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	
+	<!-- 查找商品 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product` product
+		<where>
+			<if test="productCategory != null">
+				AND product.product_category_id IN (SELECT id FROM product_category WHERE id = #{productCategory.id} OR tree_path LIKE concat('%,',#{productCategory.id},',%'))
+			</if>
+			<if test="storeProductCategory != null">
+				AND product.store_product_category_id IN (SELECT id FROM store_product_category WHERE id = #{storeProductCategory.id} OR tree_path LIKE concat('%,',#{storeProductCategory.id},',%'))
+			</if>
+			<if test="isMarketable != null">
+				AND product.is_marketable = #{isMarketable}
+			</if>
+			<if test="isActive != null">
+				AND product.is_active = #{isActive}
+			</if>
+			<if test="beginDate != null">
+				AND created_date <![CDATA[ >= ]]> #{beginDate}
+			</if>
+			<if test="endDate != null">
+				AND created_date <![CDATA[ <= ]]> #{endDate}
+			</if>
+			<if test="first != null and count != null">
+				LIMIT ${first}, ${count}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 排名类型查找商品 -->
+	<select id="findByRankingTypeList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product` product
+		WHERE 
+			1 = 1
+		<if test="store != null">
+			AND	store_id = #{store.id}
+		</if>
+		<if test="rankingType != null">
+			<choose>
+				<when test="rankingType.name == 'SCORE'">
+					ORDER BY score , score_count DESC
+				</when>
+				<when test="rankingType.name == 'SCORE_COUNT'">
+					ORDER BY score_count , score DESC
+				</when>
+				<when test="rankingType.name == 'WEEK_HITS'">
+					ORDER BY week_hits DESC
+				</when>
+				<when test="rankingType.name == 'MONTH_HITS'">
+					ORDER BY month_hits DESC
+				</when>
+				<when test="rankingType.name == 'HITS'">
+					ORDER BY hits DESC
+				</when>
+				<when test="rankingType.name == 'WEEK_SALES'">
+					ORDER BY week_sales DESC
+				</when>
+				<when test="rankingType.name == 'MONTH_SALES'">
+					ORDER BY month_sales DESC
+				</when>
+				<when test="rankingType.name == 'SALES'">
+					ORDER BY sales DESC
+				</when>
+			</choose>
+		</if>
+		<if test="count != null">
+			LIMIT 0, ${count}
+		</if>
+	</select>
+	
+	<!-- 查找文章分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product` product
+		LEFT JOIN `store` store ON product.`store_id` = store.id
+		LEFT JOIN `product_category` productCategory ON product.product_category_id = productCategory.id
+
+		<if test="productTag != null">
+			INNER JOIN `product_product_tag` productTags ON product.id = productTags.products_id
+			INNER JOIN `product_tag` productTag ON productTags.product_tags_id = productTag.id
+		</if>
+		<if test="storeProductTag != null">
+			INNER JOIN `product_store_product_tag` storeProduct ON product.id = storeProduct.products_id
+			INNER JOIN `store_product_tag` storeProductTag ON storeProduct.store_product_tags_id = storeProductTag.id
+		</if>
+
+			WHERE 1 = 1
+		<if test="type != null">
+			AND product.type = #{type.ordinal}
+		</if>
+		<if test="storeType != null">
+			AND product.store_id IN (SELECT id FROM store WHERE type = #{storeType.ordinal})
+		</if>
+		<if test="store != null">
+			AND product.store_id = #{store.id}
+
+		</if>
+
+		<if test="erpFlag != null">
+			AND product.erp_flag = #{erpFlag}
+		</if>
+
+		<if test="productCategory != null">
+			AND product_category_id IN(SELECT id FROM product_category WHERE id = #{productCategory.id} OR tree_path LIKE concat('%,', #{productCategory.id}, ',%'))
+		</if>
+		<if test="storeProductCategory != null">
+			AND store_product_category_id IN(SELECT id FROM store_product_category WHERE id = #{storeProductCategory.id} OR tree_path LIKE concat('%,', #{storeProductCategory.id}, ',%'))
+		</if>
+		<if test="brand != null">
+			AND brand_id = #{brand.id}
+		</if>
+
+		<if test="productTag != null">
+			AND productTag.id = #{productTag.id}
+		</if>
+		<if test="storeProductTag != null">
+			AND storeProductTag.id = #{storeProductTag.id}
+		</if>
+		<if test="startPrice != null and startPrice >= 0">
+			AND price <![CDATA[ >= ]]> #{startPrice}
+		</if>
+		<if test="endPrice != null and endPrice >= 0">
+			AND price <![CDATA[ <= ]]> #{endPrice}
+		</if>
+		<if test="isMarketable != null">
+			AND is_marketable = #{isMarketable}
+		</if>
+		<if test="isList != null">
+			AND is_list = #{isList}
+		</if>
+		<if test="isTop != null">
+			AND is_top = #{isTop}
+		</if>
+		<if test="isActive != null">
+			AND is_active = #{isActive}
+		</if>
+
+		<if test="isOutOfStock != null">
+			<if test="isOutOfStock == true">
+				AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ <= ]]> allocated_stock))
+			</if>
+			<if test="isOutOfStock == false">
+				AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ > ]]> allocated_stock))
+			</if>
+		</if>
+		<if test="isStockAlert != null">
+			<if test="isStockAlert == true">
+				AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ <= ]]> allocated_stock + 5))
+			</if>
+			<if test="isStockAlert == false">
+				AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ > ]]> allocated_stock + 5))
+			</if>
+		</if>
+
+		<if test="orderType != null">
+			<choose>
+				<when test="orderType.name == 'TOP_DESC'">
+					ORDER BY is_top DESC
+				</when>
+				<when test="orderType.name == 'PRICE_ASC'">
+					ORDER BY price ASC
+				</when>
+				<when test="orderType.name == 'PRICE_DESC'">
+					ORDER BY price DESC
+				</when>
+				<when test="orderType.name == 'SALES_DESC'">
+					ORDER BY sales DESC
+				</when>
+				<when test="orderType.name == 'SALES_ASC'">
+					ORDER BY sales ASC
+				</when>
+				<when test="orderType.name == 'SCORE_DESC'">
+					ORDER BY score DESC
+				</when>
+				<when test="orderType.name == 'SCORE_ASC'">
+					ORDER BY score ASC
+				</when>
+				<when test="orderType.name == 'DATE_DESC'">
+					ORDER BY product.created_date DESC
+				</when>
+			</choose>
+		</if>
+
+		<if test="noteId != null">
+			AND concat(',',note_ids,',')  like  concat('%,',#{noteId},',%')
+		</if>
+
+		<if test="ew.nonEmptyOfWhere == true">
+			AND
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查询商品数量 -->
+	<select id="selectCount" resultType="long">
+		SELECT
+			count(1)
+		FROM 
+			`product` product
+		<where>
+			<if test="type != null">
+				AND type = #{type.ordinal}
+			</if>
+			<if test="store != null">
+				AND store_id = #{store.id}
+			</if>
+			<if test="isMarketable != null">
+				AND is_marketable = #{isMarketable}
+			</if>
+			<if test="isList != null">
+				AND is_list != #{isList}
+			</if>
+			<if test="isTop != null">
+				AND is_top = #{isTop}
+			</if>
+			<if test="isActive != null">
+				AND is_active = #{isActive}
+			</if>
+			<if test="isOutOfStock != null">
+				<if test="isOutOfStock == true">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ <= ]]> allocated_stock))
+				</if>
+				<if test="isOutOfStock == false">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ > ]]> allocated_stock))
+				</if>
+			</if>
+			<if test="isStockAlert != null">
+				<if test="isStockAlert == true">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ <= ]]> allocated_stock + 5))
+				</if>
+				<if test="isStockAlert == false">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ > ]]> allocated_stock + 5))
+				</if>
+			</if>
+		</where>
+	</select>
+
+	<select id="count" resultType="long">
+		SELECT
+		count(1)
+		FROM
+		`product` product
+		<where>
+			<if test="type != null">
+				AND type = #{type.ordinal}
+			</if>
+			<if test="store != null">
+				AND store_id = #{store.id}
+				AND product.business_id = #{store.businessId}
+			</if>
+			<if test="isMarketable != null">
+				AND is_marketable = #{isMarketable}
+			</if>
+			<if test="isList != null">
+				AND is_list != #{isList}
+			</if>
+			<if test="isTop != null">
+				AND is_top = #{isTop}
+			</if>
+			<if test="isActive != null">
+				AND is_active = #{isActive}
+			</if>
+			<if test="isOutOfStock != null">
+				<if test="isOutOfStock == true">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ <= ]]> allocated_stock))
+				</if>
+				<if test="isOutOfStock == false">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ > ]]> allocated_stock))
+				</if>
+			</if>
+			<if test="isStockAlert != null">
+				<if test="isStockAlert == true">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ <= ]]> allocated_stock + 5))
+				</if>
+				<if test="isStockAlert == false">
+					AND (EXISTS(SELECT id FROM sku WHERE product_id = product.id AND stock <![CDATA[ > ]]> allocated_stock + 5))
+				</if>
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 刷新商品有效状态 -->
+	<update id="refreshActive">
+		<!-- 设置商品有效状态 -->
+		<if test="store != null">
+			UPDATE product
+			SET is_active = 1
+			WHERE
+				is_active = 0
+			AND store_id = #{store.id}
+			AND store_id IN(
+				SELECT
+					store.id
+				FROM
+					store store
+				WHERE
+					store.is_enabled = 1
+				AND store.`status` = 3
+				AND(store.end_date IS NOT NULL)
+				AND store.end_date <![CDATA[ > ]]> NOW()
+			)
+			AND product_category_id IN(
+				SELECT
+					product.id
+				FROM
+					product_category product
+				INNER JOIN product_category_store stores ON product.id = stores.product_categories_id
+				INNER JOIN store store2 ON stores.stores_id = store2.id
+				WHERE
+					store2.id = product.store_id
+			);
+		</if>
+		
+		<!-- 设置商品无效状态 -->
+		<if test="store != null">
+			UPDATE product
+			SET is_active = 0
+			WHERE
+				is_active = 1
+			AND store_id = #{store.id}
+			AND store_id IN(
+				SELECT
+					store.id
+				FROM
+					`store` store
+				WHERE
+					store.is_enabled <![CDATA[ <> ]]> 1
+				OR store.`status` <![CDATA[ <> ]]> 3
+				OR store.end_date IS NULL
+				OR store.end_date <![CDATA[ <= ]]> NOW()
+			)
+			OR product_category_id NOT IN(
+				SELECT
+					productCategory.id
+				FROM
+					product_category productCategory
+				INNER JOIN product_category_store stores ON productCategory.id = stores.product_categories_id
+				INNER JOIN store store1 ON stores.stores_id = store1.id
+				WHERE
+					store1.id = product.store_id
+			);
+		</if>
+	</update>
+	
+	<!-- 判断是否存在 -->
+	<select id="exists" resultType="boolean">
+		SELECT
+			COUNT(1)
+		FROM
+			`product`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Product">
+    	INSERT INTO product(
+			id ,
+			created_date ,
+			version ,
+			attribute_value0 ,
+			attribute_value1 ,
+			attribute_value10 ,
+			attribute_value11 ,
+			attribute_value12 ,
+			attribute_value13 ,
+			attribute_value14 ,
+			attribute_value15 ,
+			attribute_value16 ,
+			attribute_value17 ,
+			attribute_value18 ,
+			attribute_value19 ,
+			attribute_value2 ,
+			attribute_value3 ,
+			attribute_value4 ,
+			attribute_value5 ,
+			attribute_value6 ,
+			attribute_value7 ,
+			attribute_value8 ,
+			attribute_value9 ,
+			caption ,
+			cost ,
+			hits ,
+			is_active ,
+			is_delivery ,
+			is_list ,
+			is_marketable ,
+			is_top ,
+			keyword ,
+			market_price ,
+			max_commission ,
+			memo ,
+			month_hits ,
+			month_hits_date ,
+			month_sales ,
+			month_sales_date ,
+			`name` ,
+			parameter_values ,
+			price ,
+			product_images ,
+			sales ,
+			score ,
+			score_count ,
+			sn ,
+			specification_items ,
+			total_score ,
+			`type` ,
+			unit ,
+			week_hits ,
+			week_hits_date ,
+			week_sales ,
+			week_sales_date ,
+			weight ,
+			brand_id ,
+			product_category_id ,
+			store_id ,
+			store_product_category_id ,
+			introduction,
+			erp_flag,
+			internal_number,
+			counter_no,
+			counter_name,
+			is_pro,
+			business_id,
+			is_area_lock,
+			area_ids,
+			business_name,
+		    more_freight
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.attributeValue0}, 
+			#{entity.attributeValue1}, 
+			#{entity.attributeValue10}, 
+			#{entity.attributeValue11}, 
+			#{entity.attributeValue12}, 
+			#{entity.attributeValue13}, 
+			#{entity.attributeValue14}, 
+			#{entity.attributeValue15}, 
+			#{entity.attributeValue16}, 
+			#{entity.attributeValue17}, 
+			#{entity.attributeValue18}, 
+			#{entity.attributeValue19}, 
+			#{entity.attributeValue2}, 
+			#{entity.attributeValue3}, 
+			#{entity.attributeValue4}, 
+			#{entity.attributeValue5}, 
+			#{entity.attributeValue6}, 
+			#{entity.attributeValue7}, 
+			#{entity.attributeValue8}, 
+			#{entity.attributeValue9}, 
+			#{entity.caption}, 
+			#{entity.cost}, 
+			#{entity.hits}, 
+			#{entity.isActive}, 
+			#{entity.isDelivery}, 
+			#{entity.isList}, 
+			#{entity.isMarketable}, 
+			#{entity.isTop}, 
+			#{entity.keyword}, 
+			#{entity.marketPrice}, 
+			#{entity.maxCommission}, 
+			#{entity.memo}, 
+			#{entity.monthHits}, 
+			#{entity.monthHitsDate}, 
+			#{entity.monthSales}, 
+			#{entity.monthSalesDate}, 
+			#{entity.name}, 
+			#{entity.parameterValues, typeHandler=net.xiaoxiangshop.handlers.ParameterValueHandler},
+			#{entity.price}, 
+			#{entity.productImages, typeHandler=net.xiaoxiangshop.handlers.ProductImageHandler},
+			#{entity.sales}, 
+			#{entity.score}, 
+			#{entity.scoreCount}, 
+			#{entity.sn}, 
+			#{entity.specificationItems, typeHandler=net.xiaoxiangshop.handlers.SpecificationItemConverter},
+			#{entity.totalScore}, 
+			#{entity.type}, 
+			#{entity.unit}, 
+			#{entity.weekHits}, 
+			#{entity.weekHitsDate}, 
+			#{entity.weekSales}, 
+			#{entity.weekSalesDate}, 
+			#{entity.weight}, 
+			#{entity.brand.id}, 
+			#{entity.productCategory.id}, 
+			#{entity.store.id}, 
+			#{entity.storeProductCategory.id}, 
+			#{entity.introduction},
+			#{entity.erpFlag},
+			#{entity.internalNumber},
+			#{entity.counterNo},
+			#{entity.counterName},
+			#{entity.isPro},
+			#{entity.businessId},
+			#{entity.isAreaLock},
+			#{entity.areaIds},
+			#{entity.businessName},
+		    #{entity.moreFreight}
+		);
+		
+
+		
+		<!-- 商品标签关连表 -->
+		<if test="entity.productTags != null and entity.productTags.size > 0">
+			INSERT INTO `product_product_tag` (products_id , product_tags_id) VALUES
+			<foreach collection="entity.productTags" item="productTag" index="index" separator="," close=";">
+				(#{entity.id}, #{productTag.id})
+			</foreach>
+		</if>
+		
+		<!-- 店铺商品标签关连表 -->
+		<if test="entity.storeProductTags != null and entity.storeProductTags.size > 0">
+			INSERT INTO `product_store_product_tag` (products_id , store_product_tags_id) VALUES
+			<foreach collection="entity.storeProductTags" item="storeProductTag" index="index" separator="," close=";">
+				(#{entity.id}, #{storeProductTag.id})
+			</foreach>
+		</if>
+		
+  	</insert>
+
+
+
+	<!-- 更新 -->
+	<update id="updateBusiness" parameterType="net.xiaoxiangshop.entity.Product">
+			UPDATE product
+			SET last_modified_date = #{entity.lastModifiedDate},
+			business_id = #{entity.businessId},
+			business_name = #{entity.businessName}
+			WHERE id = #{entity.id}
+			AND version = #{entity.version};
+	</update>
+  	
+	<!-- 更新 -->
+	<update id="update" parameterType="net.xiaoxiangshop.entity.Product">
+    	UPDATE product
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			attribute_value0 = #{entity.attributeValue0},
+			attribute_value1 = #{entity.attributeValue1},
+			attribute_value10 = #{entity.attributeValue10},
+			attribute_value11 = #{entity.attributeValue11},
+			attribute_value12 = #{entity.attributeValue12},
+			attribute_value13 = #{entity.attributeValue13},
+			attribute_value14 = #{entity.attributeValue14},
+			attribute_value15 = #{entity.attributeValue15},
+			attribute_value16 = #{entity.attributeValue16},
+			attribute_value17 = #{entity.attributeValue17},
+			attribute_value18 = #{entity.attributeValue18},
+			attribute_value19 = #{entity.attributeValue19},
+			attribute_value2 = #{entity.attributeValue2},
+			attribute_value3 = #{entity.attributeValue3},
+			attribute_value4 = #{entity.attributeValue4},
+			attribute_value5 = #{entity.attributeValue5},
+			attribute_value6 = #{entity.attributeValue6},
+			attribute_value7 = #{entity.attributeValue7},
+			attribute_value8 = #{entity.attributeValue8},
+			attribute_value9 = #{entity.attributeValue9},
+			caption = #{entity.caption},
+			cost = #{entity.cost},
+			hits = #{entity.hits},
+			is_active = #{entity.isActive},
+			is_delivery = #{entity.isDelivery},
+			is_list = #{entity.isList},
+			is_marketable = #{entity.isMarketable},
+			is_top = #{entity.isTop},
+			keyword = #{entity.keyword},
+			market_price = #{entity.marketPrice},
+			max_commission = #{entity.maxCommission},
+			memo = #{entity.memo},
+			month_hits = #{entity.monthHits},
+			month_hits_date = #{entity.monthHitsDate},
+			month_sales = #{entity.monthSales},
+			month_sales_date = #{entity.monthSalesDate},
+			`name` = #{entity.name},
+			parameter_values = #{entity.parameterValues, typeHandler=net.xiaoxiangshop.handlers.ParameterValueHandler},
+			price = #{entity.price},
+			product_images = #{entity.productImages, typeHandler=net.xiaoxiangshop.handlers.ProductImageHandler},
+			sales = #{entity.sales},
+			score = #{entity.score},
+			score_count = #{entity.scoreCount},
+			sn = #{entity.sn},
+			specification_items = #{entity.specificationItems, typeHandler=net.xiaoxiangshop.handlers.SpecificationItemConverter},
+			total_score = #{entity.totalScore},
+			`type` = #{entity.type},
+			unit = #{entity.unit},
+			week_hits = #{entity.weekHits},
+			week_hits_date = #{entity.weekHitsDate},
+			week_sales = #{entity.weekSales},
+			week_sales_date = #{entity.weekSalesDate},
+			weight = #{entity.weight},
+			brand_id = #{entity.brand.id},
+			product_category_id = #{entity.productCategory.id},
+			store_product_category_id = #{entity.storeProductCategory.id},
+			introduction = #{entity.introduction},
+			note_ids = #{entity.noteIds},
+			begin_date = #{entity.beginDate},
+			end_date = #{entity.endDate},
+			is_area_lock = #{entity.isAreaLock},
+			area_ids = #{entity.areaIds},
+			sync_time = #{entity.syncTime},
+			sync_flag = #{entity.syncFlag},
+			counter_no = #{entity.counterNo},
+		    counter_name = #{entity.counterName},
+			erp_flag = #{entity.erpFlag},
+		    is_pro = #{entity.isPro},
+			internal_number = #{entity.internalNumber},
+		    more_freight = #{entity.moreFreight}
+		WHERE id = #{entity.id}
+		AND version = #{entity.version};
+		
+
+		
+		<!-- 店铺产品标签关连表 -->
+		DELETE FROM product_store_product_tag WHERE products_id = #{entity.id};
+		
+		<!-- 产品标签关连表 -->
+		DELETE FROM product_product_tag WHERE products_id = #{entity.id};
+		
+
+		<!-- 商品标签关连表 -->
+		<if test="entity.productTags != null and entity.productTags.size > 0">
+			INSERT INTO `product_product_tag` (products_id , product_tags_id) VALUES
+			<foreach collection="entity.productTags" item="productTag" index="index" separator="," close=";">
+				(#{entity.id}, #{productTag.id})
+			</foreach>
+		</if>
+		
+		<!-- 店铺商品标签关连表 -->
+		<if test="entity.storeProductTags != null and entity.storeProductTags.size > 0">
+			INSERT INTO `product_store_product_tag` (products_id , store_product_tags_id) VALUES
+			<foreach collection="entity.storeProductTags" item="storeProductTag" index="index" separator="," close=";">
+				(#{entity.id}, #{storeProductTag.id})
+			</foreach>
+		</if>
+  	</update>
+
+
+  	<!-- 移除 -->
+	<delete id="delete" parameterType="java.util.List">
+		<!-- 库存表 -->
+		DELETE FROM stock_log WHERE sku_id IN (SELECT id FROM sku WHERE product_id IN
+		<foreach collection="ids" item="id" open="(" separator="," close="));">
+			#{id}
+		</foreach>
+		
+		<!-- SKU表 -->
+		DELETE FROM sku WHERE product_id IN
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+
+		
+		<!-- 店铺产品标签关连表 -->
+		DELETE FROM product_store_product_tag WHERE products_id IN 
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+		
+		<!-- 产品标签关连表 -->
+		DELETE FROM product_product_tag WHERE products_id IN 
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+		
+		<!-- 产品表 -->
+		DELETE FROM product WHERE id IN 
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 上架商品 -->
+	<update id="shelves" parameterType="java.util.List">
+		UPDATE product SET is_marketable = TRUE WHERE is_marketable = FALSE AND id IN
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+	</update>
+	
+	<!-- 下架商品 -->
+	<update id="shelf" parameterType="java.util.List">
+		UPDATE product SET is_marketable = FALSE WHERE is_marketable = TRUE AND id IN
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+	</update>
+	
+</mapper>

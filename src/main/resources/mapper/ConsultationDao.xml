@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ConsultationDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Consultation">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="content" property="content" />
+        <result column="ip" property="ip" />
+        <result column="is_show" property="isShow" />
+        <association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+        <association property="product" select="net.xiaoxiangshop.dao.ProductDao.find" column="product_id" javaType="net.xiaoxiangshop.entity.Product" fetchType="lazy"/>
+        <association property="forConsultation" select="find" column="for_consultation_id"  javaType="net.xiaoxiangshop.entity.Consultation" fetchType="lazy"/>
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+        <collection property="replyConsultations" select="findSet" column="{attributeName=forConsultationId, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Consultation" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, content, ip, is_show, for_consultation_id, member_id, product_id, store_id, 'forConsultationId'
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			consultation
+		WHERE
+			id = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultType="net.xiaoxiangshop.entity.Consultation">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			consultation
+		<where>
+			<choose>
+		  		<when test="attributeName == 'forConsultationId'">
+					for_consultation_id = #{attributeValue}
+					ORDER BY
+						created_date DESC
+		  		</when>
+		  		<otherwise>
+					${attributeName} = #{attributeValue}
+		  		</otherwise>
+		  	</choose>
+		</where>
+	</select>
+	
+	<!-- 查找咨询 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			consultation
+		WHERE 
+			for_consultation_id IS NULL
+		<if test="member != null">
+	  		AND member_id = #{member.id}
+	  	</if>
+	    <if test="product != null">
+	  		AND product_id = #{product.id}
+	    </if>
+		<if test="isShow">
+		  	AND is_show = #{isShow}
+		</if>
+		<if test="ew.nonEmptyOfWhere == true">
+			AND
+		</if>
+		  ${ew.sqlSegment}
+	</select>
+	
+	<!-- 查找评论分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			consultation
+		WHERE
+			for_consultation_id IS NULL
+		<if test="member != null">
+		  	AND member_id = #{member.id}
+		</if>
+		<if test="product != null">
+		  	AND product_id = #{product.id}
+		</if>
+		<if test="isShow">
+		  	AND is_show = #{isShow}
+		</if>
+		<if test="store">
+		  	AND store_id = #{store.id}
+		</if>
+		<if test="ew.nonEmptyOfWhere == true">
+			AND
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查找咨询数量 -->
+	<select id="count" resultType="long">
+		SELECT
+			count(*)
+		FROM
+			`consultation`
+		WHERE 
+			for_consultation_id IS NULL
+		<if test="member != null">
+		  	AND member_id = #{member.id}
+		</if>
+		<if test="product != null">
+		  	AND product_id = #{product.id}
+		</if>
+		<if test="isShow">
+		  	AND is_show = #{isShow}
+		</if>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Consultation">
+   		INSERT INTO consultation(
+			id ,
+			created_date ,
+			version ,
+			ip ,
+			is_show ,
+			for_consultation_id ,
+			member_id ,
+			product_id ,
+			store_id ,
+			content
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.ip}, 
+			#{entity.isShow}, 
+			#{entity.forConsultation.id}, 
+			#{entity.member.id}, 
+			#{entity.product.id}, 
+			#{entity.store.id}, 
+			#{entity.content}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.Consultation">
+   		UPDATE consultation
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			ip = #{entity.ip},
+			is_show = #{entity.isShow},
+			for_consultation_id = #{entity.forConsultation.id},
+			member_id = #{entity.member.id},
+			product_id = #{entity.product.id},
+			store_id = #{entity.store.id},
+			content = #{entity.content}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  	
+</mapper>

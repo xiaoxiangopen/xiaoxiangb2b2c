@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.MemberRankDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.MemberRank">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="amount" property="amount" />
+        <result column="is_default" property="isDefault" />
+        <result column="is_special" property="isSpecial" />
+        <result column="name" property="name" />
+        <result column="scale" property="scale" />
+		<result column="erp_rank" property="erpRank" />
+		<result column="discount_rate" property="discountRate" />
+		<result column="erp_normal_price_column" property="erpNormalPriceColumn" />
+		<result column="erp_promotion_price_column" property="erpPromotionPriceColumn" />
+		<result column="sku_normal_price_column" property="skuNormalPriceColumn" />
+		<result column="sku_promotion_price_column" property="skuPromotionPriceColumn" />
+        <collection property="members" select="net.xiaoxiangshop.dao.MemberDao.findSet" column="{attributeName=member_rank_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, amount, is_default, is_special, name, scale,erp_rank,erp_normal_price_column,erp_promotion_price_column,sku_normal_price_column,sku_promotion_price_column,
+         'member_rank_id',discount_rate
+    </sql>
+
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`member_rank` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`member_rank`
+		LEFT JOIN `promotion_member_rank` ON id = member_ranks_id
+		WHERE
+			promotions_id = #{attributeValue}
+	</select>
+	
+	<!-- 查找所有实体对象集合 -->
+	<select id="findAll" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`member_rank` 
+	</select>
+	
+	<!-- 判断是否存在 -->
+	<select id="exists" resultType="boolean">
+		SELECT
+			COUNT(1)
+		FROM
+			`member_rank`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 判断是否唯一 -->
+	<select id="unique" resultType="boolean">
+		SELECT
+			COUNT(1)
+		FROM
+			`member_rank`
+		WHERE
+			${attributeName } = #{attributeValue}
+		<if test="id != null">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 查找默认会员等级 -->
+	<select id="findDefault" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			member_rank
+		WHERE
+			is_default = TRUE
+	</select>
+	
+	<!-- 根据消费金额查找符合此条件的最高会员等级 -->
+	<select id="findByAmount" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			member_rank
+		WHERE
+			is_special = FALSE
+		AND amount <![CDATA[<=]]> #{amount}
+		ORDER BY
+			amount DESC
+		LIMIT 0, 1
+	</select>
+	
+	<!-- 清除默认 -->
+	<update id="clearDefault">
+		UPDATE member_rank SET is_default = FALSE WHERE is_default = TRUE
+	</update>
+	
+	<!-- 清除默认, 排除会员等级 -->
+	<update id="clearDefaultExclude">
+		UPDATE member_rank SET is_default = FALSE WHERE is_default = TRUE AND id != #{exclude.id}
+	</update>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.MemberRank">
+   		INSERT INTO member_rank(
+			id ,
+			created_date ,
+			version ,
+			amount ,
+			is_default ,
+			is_special ,
+			name ,
+			scale,
+			erp_rank,
+			erp_normal_price_column,
+			erp_promotion_price_column,
+			sku_normal_price_column,
+			sku_promotion_price_column
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate},
+			#{entity.version}, 
+			#{entity.amount}, 
+			#{entity.isDefault}, 
+			#{entity.isSpecial}, 
+			#{entity.name}, 
+			#{entity.scale},
+			#{entity.erpRank},
+			#{entity.erpNormalPriceColumn},
+			#{entity.erpPromotionPriceColumn},
+			#{entity.skuNormalPriceColumn},
+			#{entity.skuPromotionPriceColumn})
+  	</insert>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="net.xiaoxiangshop.entity.MemberRank">
+	    UPDATE member_rank
+			SET last_modified_date = #{entity.lastModifiedDate},
+				version = #{entity.version} + 1,
+				amount = #{entity.amount},
+				is_default = #{entity.isDefault},
+				is_special = #{entity.isSpecial},
+				name = #{entity.name},
+				scale = #{entity.scale},
+				erp_rank= #{entity.erpRank},
+				erp_normal_price_column= #{entity.erpNormalPriceColumn},
+				erp_promotion_price_column= #{entity.erpPromotionPriceColumn},
+				sku_normal_price_column= #{entity.skuNormalPriceColumn},
+				sku_promotion_price_column= #{entity.skuPromotionPriceColumn},
+				discount_rate=#{entity.discountRate}
+			WHERE
+				id = #{entity.id}
+			AND version = #{entity.version}
+	 </update>
+	 
+</mapper>

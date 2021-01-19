@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ProductFavoriteDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.ProductFavorite">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy" />
+        <association property="product" select="net.xiaoxiangshop.dao.ProductDao.find" column="product_id" javaType="net.xiaoxiangshop.entity.Product" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, member_id, product_id
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_favorite` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_favorite`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 判断商品收藏是否存在 -->
+	<select id="exists" resultType="boolean">
+		SELECT
+			count(*)
+		FROM
+			`product_favorite`
+		<where>
+			<if test="member != null">
+				AND member_id = #{member.id}
+			</if>
+			<if test="product != null">
+				AND product_id = #{product.id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查找商品收藏数量 -->
+	<select id="count" resultType="long">
+		SELECT
+			count(*)
+		FROM
+			`product_favorite`
+		<where>
+			<if test="member != null">
+				AND member_id = #{member.id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查找品牌 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_favorite`
+		<where>
+			<if test="member != null">
+				AND member_id = #{member.id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查找商品收藏分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			product_favorite
+		<where>
+			<if test="member != null">
+				AND member_id = #{member.id}
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.ProductFavorite">
+   		INSERT INTO product_favorite(
+			id ,
+			created_date ,
+			version ,
+			member_id ,
+			product_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.member.id}, 
+			#{entity.product.id}
+		)
+  	</insert>
+</mapper>

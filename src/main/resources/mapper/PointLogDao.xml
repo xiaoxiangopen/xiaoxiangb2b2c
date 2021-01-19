@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.PointLogDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.PointLog">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="balance" property="balance" />
+        <result column="credit" property="credit" />
+        <result column="debit" property="debit" />
+        <result column="memo" property="memo" />
+        <result column="type" property="type" />
+        <association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        point_log.id,
+        point_log.version,
+        point_log.created_date, point_log.last_modified_date, point_log.balance, point_log.credit, point_log.debit, point_log.memo, point_log.type, point_log.member_id
+    </sql>
+    
+    <!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`point_log`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+    <!-- 查找实体对象分页 -->
+	<select id="selectPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`point_log`
+		left join  `users` member  on member.id=point_log.member_id and member.dtype='Member'
+		<if test="ew.nonEmptyOfWhere == true">
+			WHERE
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查找积分记录分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`point_log`
+		left join  `users` member  on member.id=point_log.member_id and member.dtype='Member'
+		<where>
+			<if test="ew.nonEmptyOfWhere == true">
+				AND
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.PointLog">
+   		INSERT INTO point_log(
+			id ,
+			created_date ,
+			version ,
+			balance ,
+			credit ,
+			debit ,
+			memo ,
+			`type` ,
+			member_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.balance}, 
+			#{entity.credit}, 
+			#{entity.debit}, 
+			#{entity.memo}, 
+			#{entity.type}, 
+			#{entity.member.id}
+		)
+  	</insert>
+  
+</mapper>

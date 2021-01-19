@@ -1,0 +1,101 @@
+@charset "utf-8";
+
+/* ---------- login ---------- */
+.login {
+	background: url(../images/login.png) repeat-x;
+}
+
+.login main {
+	margin: 0px;
+}
+
+.login main .panel {
+	width: 500px;
+	padding: 0px 35px;
+	margin: 200px auto 0px auto;
+	color: #ffffff;
+	border-radius: 10px;
+	-webkit-transition: box-shadow 0.5s;
+	transition: box-shadow 0.5s;
+	box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
+	border: none;
+	background-color: #ffffff;
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.login main .panel:hover {
+	box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.2);
+}
+
+.login main .panel > .panel-heading {
+	padding: 20px 0px;
+	color: #ffffff;
+	font-size: 14px;
+	border-color: rgba(255, 255, 255, 0.3);
+	background-color: transparent;
+}
+
+.login main .panel > .panel-body {
+	padding: 20px 0px;
+}
+
+.login main .panel .input-group .input-group-addon {
+	border: none;
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.login main .panel .input-group .input-group-addon .iconfont {
+	color: #ffffff;
+	font-size: 16px;
+}
+
+.login main .panel input {
+	color: #ffffff;
+	-webkit-transition: 0.3s;
+	transition: 0.3s;
+	border-radius: 0px;
+	border: none;
+	background-color: #ffffff;
+	background-color: rgba(255, 255, 255, 0.4);
+}
+
+.login main .panel input:hover {
+	box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+	background-color: rgba(255, 255, 255, 0.5);
+}
+
+.login main .panel input:focus {
+	box-shadow: none;
+}
+
+.login main .panel input::-webkit-input-placeholder {
+	color: #ffffff;
+}
+
+.login main .panel input::-moz-placeholder {
+	color: #ffffff;
+}
+
+.login main .panel input::-ms-input-placeholder {
+	color: #ffffff;
+}
+
+.login main .panel label {
+	color: #ffffff;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.login main .panel .btn-primary {
+	-webkit-transition: background-color 0.3s, box-shadow 0.3s;
+	transition: background-color 0.3s, box-shadow 0.3s;
+	border: none;
+	background-color: #ffa500;
+}
+
+.login main .panel .btn-primary:hover {
+	box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, 0.1);
+	background-color: #ffa100;
+}

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.InstantMessageDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.InstantMessage">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="orders" property="order" />
+        <result column="account" property="account" />
+        <result column="name" property="name" />
+        <result column="type" property="type" />
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, orders, account, name, type, store_id
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`instant_message` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`instant_message`
+		WHERE
+			${attributeName} = #{attributeValue}
+		ORDER BY
+			`orders` ASC
+	</select>
+	
+	<!-- 查找即时通讯 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`instant_message`
+		<where>
+			<if test="type != null">
+				type = #{type.ordinal}
+			</if>
+			<if test="store != null">
+				store_id = #{store.id}
+			</if>
+			<if test="ew.nonEmptyOfWhere == true">
+				AND
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 查找即时通讯分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`instant_message`
+		<where>
+			<if test="store != null">
+				AND store_id = #{store.id}
+			</if>
+		  	<if test="ew.nonEmptyOfWhere == true">
+				AND
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.InstantMessage">
+   		INSERT INTO instant_message(
+			id ,
+			created_date ,
+			version ,
+			orders ,
+			account ,
+			`name` ,
+			`type` ,
+			store_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.order}, 
+			#{entity.account}, 
+			#{entity.name}, 
+			#{entity.type}, 
+			#{entity.store.id}
+		)
+  	</insert>
+  
+	<!-- 更新 -->
+	<update id="update" parameterType="net.xiaoxiangshop.entity.InstantMessage">
+    	UPDATE instant_message
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			orders = #{entity.order},
+			account = #{entity.account},
+			`name` = #{entity.name},
+			`type` = #{entity.type}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  
+</mapper>

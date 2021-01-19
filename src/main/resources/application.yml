@@ -1,0 +1,94 @@
+server:
+  session-timeout: 180000
+  #    tomcat:
+  #        max-threads: 1000
+  #        min-spare-threads: 30
+  port: 8080
+  servlet:
+    #    context-path: /xiaoxiangshop-b2b2c
+    context-path: /
+#    uri-encoding: utf-8
+security:
+  basic:
+#    enabled: false
+spring:
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
+  profiles:
+    active: dev
+  devtools:
+    restart:
+      enabled: true
+      additional-paths: src/main/java
+      exclude: WEB-INF/**
+  messages:
+    fallbackToSystemLocale: false
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  mobile:
+    devicedelegatingviewresolver:
+      enabled: true
+      tablet-prefix: mobile/
+  # 404 交给异常处理器处理
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
+#mybatis
+mybatis-plus:
+  mapper-locations: mapper/*Dao.xml
+  typeAliasesPackage: net.xiaoxiangshop.entity
+  typeEnumsPackage: net.xiaoxiangshop.entity
+  global-config:
+    id-type: 3
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true
+    #配置返回数据库(column下划线命名&&返回java实体是驼峰命名)，自动匹配无需as（没开启这个，SQL需要写as： select user_id as userId） 
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    #逻辑删除配置（下面3个配置）
+    logic-delete-value: 1
+    logic-not-delete-value: 0
+    #sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+    #自定义SQL注入器
+    #sql-injector: com.baomidou.springboot.xxx
+    # SQL 解析缓存，开启后多租户 @SqlParser 注解生效
+    # 公共字段自动填充
+    #metaObjectHandler: net.xiaoxiangshop.config.MyMetaObjectHandler
+    sql-parser-cache: true
+    # 是否自动刷新 Mapper 对应的 XML 文件
+    refresh: true
+    # 数据库类型
+    db-config:
+      db-type: mysql
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
+    lazyLoadingEnabled: true
+    #aggressiveLazyLoading: false
+    aggressive-lazy-loading: false
+    lazyLoadTriggerMethods: ""
+    multipleResultSetsEnabled: false
+#配置缓存和session存储方式，默认ehcache,可选redis, none
+cacheType: ehcache
+#j2cache:
+#  config-location: /j2cache.properties
+#  open-spring-cache: false
+
+jwtp:
+  ## 0是 redisTokenStore ，1是 jdbcTokenStore ，默认是0
+  store-type: 0
+  ## 拦截路径，默认是/**
+  path: /api/member/**,/api/business/**,/api/cart/**
+  ## 排除拦截路径，默认无
+  exclude-path: /,/admin/**,/business/**,/member/**,/api/social_user,/api/business/login
+  ## 单个用户最大token数，默认-1不限制
+  max-token: -1

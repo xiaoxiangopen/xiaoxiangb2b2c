@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.MemberAttributeDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.MemberAttribute">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="orders" property="order" />
+        <result column="is_enabled" property="isEnabled" />
+        <result column="is_required" property="isRequired" />
+        <result column="name" property="name" />
+        <result column="options" property="options" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.OptionConverter" />
+        <result column="pattern" property="pattern" />
+        <result column="property_index" property="propertyIndex" />
+        <result column="type" property="type" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, orders, is_enabled, is_required, name, options, pattern, property_index, type
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`member_attribute` 
+		WHERE 
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找所有实体对象集合 -->
+	<select id="findAll" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`member_attribute` 
+	</select>
+	
+	<!-- 查找实体对象分页 -->
+	<select id="selectPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`member_attribute` 
+		<if test="ew.nonEmptyOfWhere == true">
+			WHERE
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查找未使用的属性序号 -->
+	<select id="findUnusedPropertyIndex" resultType="int">
+		SELECT count(*) FROM member_attribute WHERE property_index = #{index}
+	</select>
+	
+	<!-- 查找优惠券 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			member_attribute
+		<where>
+			<if test="isEnabled != null">
+				AND is_enabled = #{isEnabled}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.MemberAttribute">
+	    INSERT INTO member_attribute(
+			id ,
+			created_date ,
+			version ,
+			orders ,
+			is_enabled ,
+			is_required ,
+			name ,
+			pattern ,
+			property_index ,
+			type ,
+			options
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate},
+			#{entity.version}, 
+			#{entity.order}, 
+			#{entity.isEnabled}, 
+			#{entity.isRequired}, 
+			#{entity.name}, 
+			#{entity.pattern}, 
+			#{entity.propertyIndex}, 
+			#{entity.type}, 
+			#{entity.options, typeHandler=net.xiaoxiangshop.handlers.OptionConverter})
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.MemberAttribute">
+	   UPDATE member_attribute
+			SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			orders = #{entity.order},
+			is_enabled = #{entity.isEnabled},
+			is_required = #{entity.isRequired},
+			name = #{entity.name},
+			pattern = #{entity.pattern},
+			options = #{entity.options, typeHandler=net.xiaoxiangshop.handlers.OptionConverter}
+		WHERE
+			`id` = #{entity.id}
+		AND version = #{entity.version}
+	 </update>
+	 
+</mapper>

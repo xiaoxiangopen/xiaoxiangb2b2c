@@ -1,0 +1,22 @@
+@charset "utf-8";
+
+/* ---------- message ---------- */
+.message .content {
+	max-width: 80%;
+	padding: 10px;
+	margin: 5px 3px;
+	position: relative;
+	word-break: break-all;
+	border-radius: 5px;
+	border: 1px solid #dddddd;
+}
+
+.message .content p {
+	padding-top: 10px;
+}
+
+.message .content span {
+	position: absolute;
+	bottom: 0px;
+	left: -40px;
+}

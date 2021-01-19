@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.MessageDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Message">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="content" property="content" />
+        <result column="ip" property="ip" />
+       	<association property="fromUser" select="net.xiaoxiangshop.dao.UserDao.find" column="from_user_id" javaType="net.xiaoxiangshop.entity.User" fetchType="lazy"/>
+        <association property="toUser" select="net.xiaoxiangshop.dao.UserDao.find" column="to_user_id" javaType="net.xiaoxiangshop.entity.User" fetchType="lazy"/>
+       	<association property="fromUserMessageStatus" javaType="net.xiaoxiangshop.entity.MessageStatus">
+        	<result column="from_user_message_status_is_read" property="isRead"/>
+        	<result column="from_user_message_status_is_deleted" property="isDeleted"/>
+        </association>
+        <association property="toUserMessageStatus" javaType="net.xiaoxiangshop.entity.MessageStatus">
+        	<result column="to_user_message_status_is_read" property="isRead"/>
+        	<result column="to_user_message_status_is_deleted" property="isDeleted"/>
+        </association>
+        <association property="messageGroup" select="net.xiaoxiangshop.dao.MessageGroupDao.find" column="message_group_id" javaType="net.xiaoxiangshop.entity.MessageGroup" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, content, from_user_message_status_is_deleted, from_user_message_status_is_read, ip, to_user_message_status_is_deleted, to_user_message_status_is_read, from_user_id, message_group_id, to_user_id
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`message` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`message`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查找消息 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`message`
+		<where>
+			<if test="messageGroup != null">
+				AND message_group_id = #{messageGroup.id}
+			</if>
+			<if test="user != null">
+				AND (from_user_id = #{user.id} AND from_user_message_status_is_deleted = false OR to_user_id = #{user.id} AND to_user_message_status_is_deleted = false)
+			</if>
+		</where>
+		ORDER BY
+			created_date ASC
+	</select>
+	
+	<!-- 未读消息数量 -->
+	<!-- <include refid="Base_Column_List"></include> -->
+	<!--<select id="unreadMessageCount" resultMap="BaseResultMap">-->
+	<select id="unreadMessageCount" resultType="java.lang.Long">
+		SELECT
+
+		    count(0)
+		FROM
+			`message`
+		WHERE
+			to_user_message_status_is_read = false
+		AND to_user_message_status_is_deleted = false
+		<if test="messageGroup != null">
+			AND message_group_id = #{messageGroup.id}
+		</if>
+		<if test="user != null">
+			AND to_user_id = #{user.id}
+		</if>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Message">
+   		INSERT INTO message(
+			id ,
+			created_date ,
+			version ,
+			content ,
+			from_user_message_status_is_deleted ,
+			from_user_message_status_is_read ,
+			ip ,
+			to_user_message_status_is_deleted ,
+			to_user_message_status_is_read ,
+			from_user_id ,
+			message_group_id ,
+			to_user_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.content}, 
+			#{entity.fromUserMessageStatus.isDeleted}, 
+			#{entity.fromUserMessageStatus.isRead}, 
+			#{entity.ip}, 
+			#{entity.toUserMessageStatus.isDeleted}, 
+			#{entity.toUserMessageStatus.isRead}, 
+			#{entity.fromUser.id}, 
+			#{entity.messageGroup.id}, 
+			#{entity.toUser.id}
+		)
+  	</insert>
+  	
+  	
+</mapper>

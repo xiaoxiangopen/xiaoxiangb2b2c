@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.AdDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Ad">
+        <result column="id" property="id" />
+        <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="orders" property="order" />
+        <result column="begin_date" property="beginDate" />
+        <result column="content" property="content" />
+        <result column="end_date" property="endDate" />
+        <result column="path" property="path" />
+        <result column="title" property="title" />
+        <result column="type" property="type" />
+        <result column="url" property="url" />
+        <association property="adPosition" select="net.xiaoxiangshop.dao.AdPositionDao.find" column="ad_position_id" javaType="net.xiaoxiangshop.entity.AdPosition" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, orders, begin_date, content, end_date, path, title, type, url, ad_position_id
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`ad` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`ad`
+		WHERE
+			${attributeName} = #{attributeValue}
+
+		ORDER BY orders ASC
+	</select>
+	
+	<!-- 查找实体对象分页 -->
+	<select id="selectPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`ad`
+		<if test="ew.nonEmptyOfWhere == true">
+			WHERE
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Ad" >
+    	INSERT INTO ad(
+			id ,
+			created_date ,
+			version ,
+			orders ,
+			begin_date ,
+			end_date ,
+			path ,
+			title ,
+			type ,
+			url ,
+			ad_position_id ,
+			content
+		)
+		VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.order}, 
+			#{entity.beginDate}, 
+			#{entity.endDate}, 
+			#{entity.path}, 
+			#{entity.title}, 
+			#{entity.type}, 
+			#{entity.url}, 
+			#{entity.adPosition.id}, 
+			#{entity.content}
+		)
+ 	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.Ad">
+   		UPDATE ad
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			orders = #{entity.order},
+			begin_date = #{entity.beginDate},
+			end_date = #{entity.endDate},
+			path = #{entity.path},
+			title = #{entity.title},
+			type = #{entity.type},
+			url = #{entity.url},
+			ad_position_id = #{entity.adPosition.id},
+			content = #{entity.content}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+
+</mapper>

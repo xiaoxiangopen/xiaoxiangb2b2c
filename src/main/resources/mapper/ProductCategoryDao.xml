@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ProductCategoryDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.ProductCategory">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="orders" property="order" />
+        <result column="general_rate" property="generalRate" />
+        <result column="grade" property="grade" />
+        <result column="name" property="name" />
+        <result column="self_rate" property="selfRate" />
+        <result column="seo_description" property="seoDescription" />
+        <result column="seo_keywords" property="seoKeywords" />
+        <result column="seo_title" property="seoTitle" />
+        <result column="tree_path" property="treePath" />
+
+		<result column="deduct_stock" property="deductStock" />
+		<result column="img_url" property="imgUrl" />
+		<result column="category_type" property="categoryType" />
+		<result column="is_effective" property="effective" />
+
+        <association property="parent" select="find" column="parent_id"  javaType="net.xiaoxiangshop.entity.ProductCategory" fetchType="lazy"/>
+        <collection property="children" select="findSet" column="{attributeName=parentId, attributeValue=id}" ofType="net.xiaoxiangshop.entity.ProductCategory" fetchType="lazy"/>
+        <collection property="products" select="net.xiaoxiangshop.dao.ProductDao.findSet" column="{attributeName=product_category_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Product" fetchType="lazy"/>
+        <collection property="brands" select="net.xiaoxiangshop.dao.BrandDao.findSet" column="{attributeValue=id}" ofType="net.xiaoxiangshop.entity.Brand" fetchType="lazy"/>
+        <collection property="parameters" select="net.xiaoxiangshop.dao.ParameterDao.findSet" column="{attributeName=product_category_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Parameter" fetchType="lazy"/>
+        <collection property="attributes" select="net.xiaoxiangshop.dao.AttributeDao.findSet" column="{attributeName=product_category_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Attribute" fetchType="lazy"/>
+        <collection property="specifications" select="net.xiaoxiangshop.dao.SpecificationDao.findSet" column="{attributeName=product_category_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Specification" fetchType="lazy"/>
+        <collection property="stores" select="net.xiaoxiangshop.dao.StoreDao.findSet" column="{attributeName=product_category_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+        <collection property="categoryApplications" select="net.xiaoxiangshop.dao.CategoryApplicationDao.findSet" column="{attributeName=product_category_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.CategoryApplication" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        productCategory.id,
+        productCategory.version,
+        productCategory.created_date, productCategory.last_modified_date, productCategory.orders, productCategory.general_rate, productCategory.grade, productCategory.name, productCategory.self_rate, productCategory.seo_description, productCategory.seo_keywords, productCategory.seo_title, productCategory.tree_path,
+        productCategory.parent_id, 'parentId', 'product_category_id',
+        productCategory.deduct_stock,productCategory.img_url,productCategory.category_type,
+        productCategory.is_effective
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_category` productCategory
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultType="net.xiaoxiangshop.entity.ProductCategory">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_category` productCategory
+		<choose>
+
+			<when test="attributeName == 'parentId'">
+				WHERE
+					parent_id = #{attributeValue} and is_effective=1
+			</when>
+			<when test="attributeName == 'store_id'">
+				LEFT JOIN `product_category_store` ON id = product_categories_id
+				WHERE
+					stores_id = #{attributeValue}
+			</when>
+			<when test="attributeName == 'brand_id'">
+				LEFT JOIN `product_category_brand` ON id = product_categories_id
+				WHERE
+					brands_id = #{attributeValue}
+			</when>
+			<otherwise>
+	  			WHERE
+					${attributeName} = #{attributeValue}
+	  		</otherwise>
+		</choose>
+		ORDER BY orders ASC
+	</select>
+	
+	<!-- 查找商品分类 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_category` productCategory
+		INNER JOIN product_category_store productCategoryStore ON productCategory.id = productCategoryStore.product_categories_id
+		INNER JOIN store ON productCategoryStore.stores_id = store.id
+		<where>
+		  <if test="store != null">
+		  	AND productCategoryStore.stores_id = #{store.id}
+		  </if>
+		   ${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 查找顶级商品分类 -->
+	<select id="findRoots" parameterType="int" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			`product_category` productCategory
+		WHERE
+			parent_id IS NULL and  productCategory.is_effective=1
+		ORDER BY
+			orders ASC
+		<if test="count != null">
+			LIMIT 0, ${count}
+		</if>
+	</select>
+	
+	<!-- 查找上级商品分类 -->
+	<select id="findParents" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			`product_category` productCategory
+		<if test="recursive == true">
+			WHERE id IN 
+			<if test="productCategory.parentIds.length != 0">
+		        <foreach collection="productCategory.parentIds" item="ids" open="(" separator="," close=")" >
+		        	#{ids}
+		        </foreach>
+			</if>
+			<if test="productCategory.parentIds.length == 0">
+				('')
+			</if>
+		    ORDER BY grade ASC
+	    </if>
+	    <if test="recursive == false">
+	    	WHERE id = #{productCategory.parent.id}
+	    </if>
+	    <if test="count != null">
+			LIMIT 0, ${count}
+		</if>
+	</select>
+	
+	<!-- 查找下级商品分类 -->
+	<select id="findChildren" parameterType="map" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List" />
+		FROM
+			`product_category` productCategory
+		<if test="recursive == true">
+			<if test="productCategory != null">
+				WHERE  tree_path LIKE concat('%,',#{productCategory.id},',%') ORDER BY grade ASC, orders ASC
+	        </if>
+	        <if test="productCategory == null">
+				ORDER BY grade ASC, orders ASC
+	        </if>
+	    </if>
+	    <if test="recursive == false">
+	    	WHERE productCategory.is_effective=1 and parent_id = #{productCategory.id} ORDER BY orders ASC
+	    </if>
+	    <if test="count != null">
+			LIMIT 0, ${count}
+		</if>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.ProductCategory">
+    	INSERT INTO product_category(
+			id ,
+			created_date ,
+			version ,
+			orders ,
+			general_rate ,
+			grade ,
+			`name` ,
+			self_rate ,
+			seo_description ,
+			seo_keywords ,
+			seo_title ,
+			tree_path ,
+			parent_id,
+			deduct_stock,
+			img_url,
+			category_type
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.order}, 
+			#{entity.generalRate}, 
+			#{entity.grade}, 
+			#{entity.name}, 
+			#{entity.selfRate}, 
+			#{entity.seoDescription}, 
+			#{entity.seoKeywords}, 
+			#{entity.seoTitle}, 
+			#{entity.treePath}, 
+			#{entity.parent.id},
+			#{entity.deductStock},
+			#{entity.imgUrl},
+			#{entity.categoryType}
+			);
+
+		<!-- 品牌 -->
+		<if test="entity.brands != null and entity.brands.size > 0">
+			INSERT INTO product_category_brand (product_categories_id , brands_id) VALUES
+			<foreach collection="entity.brands" item="brands" index="index" separator="," close=";">
+				(#{entity.id}, #{brands.id})
+			</foreach>
+		</if>
+
+
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.ProductCategory">
+    	UPDATE product_category
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			orders = #{entity.order},
+			general_rate = #{entity.generalRate},
+			grade = #{entity.grade},
+			`name` = #{entity.name},
+			self_rate = #{entity.selfRate},
+			seo_description = #{entity.seoDescription},
+			seo_keywords = #{entity.seoKeywords},
+			seo_title = #{entity.seoTitle},
+			tree_path = #{entity.treePath},
+			parent_id = #{entity.parent.id},
+			deduct_stock = #{entity.deductStock},
+			img_url = #{entity.imgUrl},
+			category_type = #{entity.categoryType}
+
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version};
+
+		DELETE  from  product_category_brand where product_categories_id=#{entity.id};
+
+
+		<!-- 品牌 -->
+		<if test="entity.brands != null and entity.brands.size > 0">
+			INSERT INTO product_category_brand (product_categories_id , brands_id) VALUES
+			<foreach collection="entity.brands" item="brands" index="index" separator="," close=";">
+				(#{entity.id}, #{brands.id})
+			</foreach>
+		</if>
+
+
+
+  	</update>
+
+
+	<update id="updateState" parameterType="net.xiaoxiangshop.entity.ProductCategory">
+		UPDATE product_category
+		SET last_modified_date = #{productCategory.lastModifiedDate},
+		version = #{productCategory.version} + 1,
+		is_effective = #{productCategory.effective}
+		WHERE
+		id = #{productCategory.id}
+		AND version = #{productCategory.version};
+	</update>
+
+	<select id="findCategoryByPtId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM
+		`product_category` productCategory
+		WHERE
+		`parent_id` = #{id}
+	</select>
+
+  
+</mapper>

@@ -1,0 +1,438 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.MemberDao">
+	<!-- User查询映射结果 -->
+    <resultMap id="UserResultMap" type="net.xiaoxiangshop.entity.User">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="is_enabled" property="isEnabled" />
+        <result column="is_locked" property="isLocked" />
+        <result column="last_login_date" property="lastLoginDate" />
+        <result column="last_login_ip" property="lastLoginIp" />
+        <result column="lock_date" property="lockDate" />
+    </resultMap>
+    
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Member" extends="UserResultMap">
+    	<result column="username" property="username" />
+    	<result column="encoded_password" property="encodedPassword" />
+    	<result column="email" property="email" />
+    	<result column="mobile" property="mobile" />
+    	<result column="point" property="point" />
+    	<result column="balance" property="balance" />
+    	<result column="frozen_amount" property="frozenAmount" />
+    	<result column="amount" property="amount" />
+    	<result column="name" property="name" />
+    	<result column="gender" property="gender" />
+    	<result column="birth" property="birth" />
+    	<result column="address" property="address" />
+    	<result column="zip_code" property="zipCode" />
+    	<result column="phone" property="phone" />
+        <result column="attribute_value0" property="attributeValue0" />
+        <result column="attribute_value1" property="attributeValue1" />
+        <result column="attribute_value2" property="attributeValue2" />
+        <result column="attribute_value3" property="attributeValue3" />
+        <result column="attribute_value4" property="attributeValue4" />
+        <result column="attribute_value5" property="attributeValue5" />
+        <result column="attribute_value6" property="attributeValue6" />
+        <result column="attribute_value7" property="attributeValue7" />
+        <result column="attribute_value8" property="attributeValue8" />
+        <result column="attribute_value9" property="attributeValue9" />
+        <result column="avatar_url" property="avatarUrl" />
+		<result column="apoints" property="apoints" />
+		<result column="points" property="points" />
+		<result column="data_source" property="dataSource" />
+
+		<result column="safe_key_expire" property="safeKey.expire" />
+		<result column="safe_key_value" property="safeKey.value" />
+
+        <association property="area" select="net.xiaoxiangshop.dao.AreaDao.find" column="area_id" javaType="net.xiaoxiangshop.entity.Area" fetchType="lazy"/>
+        <association property="memberRank" select="net.xiaoxiangshop.dao.MemberRankDao.find" column="member_rank_id" javaType="net.xiaoxiangshop.entity.MemberRank" fetchType="lazy"/>
+        <association property="distributor" select="net.xiaoxiangshop.dao.DistributorDao.findByAttribute" column="{attributeName=member_id, attributeValue=id}" javaType="net.xiaoxiangshop.entity.Distributor" fetchType="lazy"/>
+        <association property="cart" select="net.xiaoxiangshop.dao.CartDao.findByAttribute" column="{attributeName=member_id, attributeValue=id}" javaType="net.xiaoxiangshop.entity.Cart" fetchType="lazy"/>
+        <collection property="orders" select="net.xiaoxiangshop.dao.OrderDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Order" fetchType="lazy"/>
+        <collection property="memberDepositLogs" select="net.xiaoxiangshop.dao.MemberDepositLogDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.MemberDepositLog" fetchType="lazy"/>
+        <collection property="receivers" select="net.xiaoxiangshop.dao.ReceiverDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Receiver" fetchType="lazy"/>
+        <collection property="reviews" select="net.xiaoxiangshop.dao.ReviewDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Review" fetchType="lazy"/>
+        <collection property="consultations" select="net.xiaoxiangshop.dao.ConsultationDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Consultation" fetchType="lazy"/>
+        <collection property="productFavorites" select="net.xiaoxiangshop.dao.ProductFavoriteDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.ProductFavorite" fetchType="lazy"/>
+        <collection property="storeFavorites" select="net.xiaoxiangshop.dao.StoreFavoriteDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.StoreFavorite" fetchType="lazy"/>
+        <collection property="productNotifies" select="net.xiaoxiangshop.dao.ProductNotifyDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.ProductNotify" fetchType="lazy"/>
+        <collection property="pointLogs" select="net.xiaoxiangshop.dao.PointLogDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.PointLog" fetchType="lazy"/>
+        <collection property="aftersales" select="net.xiaoxiangshop.dao.AftersalesDao.findSet" column="{attributeName=member_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Aftersales" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        dtype, created_date, last_modified_date, is_enabled, is_locked, last_login_date, last_login_ip, lock_date, department, email, encoded_password, mobile, name, username, attribute_value0, attribute_value1, attribute_value2, attribute_value3, attribute_value4, attribute_value5, attribute_value6, attribute_value7, attribute_value8, attribute_value9, avatar_url, balance, bank_account, bank_name, frozen_amount, id_card, id_card_image, identification_number, legal_person, license_image, license_number, organization_code, organization_image, phone, safe_key_expire, safe_key_value, tax_image, address, amount, birth, gender, point, zip_code, area_id,
+         member_rank_id,apoints,points, 'member_id',data_source
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member'
+		AND `id` = #{id}
+	</select>
+	
+	<!-- 根据属性查找实体对象 -->
+	<select id="findByAttribute" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member' and is_enabled=1
+		AND ${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member' and is_enabled=1
+		AND ${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查找会员分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member'
+		<if test="rankingType != null">
+			<choose>
+				<when test="rankingType.name == 'point'">
+					ORDER BY point DESC
+				</when>
+				<when test="rankingType.name == 'balance'">
+					ORDER BY balance DESC
+				</when>
+				<when test="rankingType.name == 'amount'">
+					ORDER BY amount DESC
+				</when>
+			</choose>
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查询会员数量 -->
+	<select id="count" resultType="long">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member'
+		<if test="beginDate != null">
+			AND created_date <![CDATA[ >= ]]> #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND created_date <![CDATA[ <= ]]> #{endDate}
+		</if>
+	</select>
+	<!-- 统计查询会员数量 -->
+	<select id="statisticCount" resultType="long">
+		SELECT
+		count(*)
+		FROM
+		`users`
+		WHERE
+		`dtype` = 'Member'
+		<if test="beginDate != null">
+			AND created_date <![CDATA[ >= ]]> #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND created_date <![CDATA[ <= ]]> #{endDate}
+		</if>
+		<if test="source != null">
+			AND data_source=#{source}
+		</if>
+	</select>
+	<!-- 查询会员数量 -->
+	<select id="total" resultType="long">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member'
+	</select>
+	
+	<!-- 判断是否存在 -->
+	<select id="exists" resultType="boolean">
+		SELECT
+			COUNT(1)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member' and is_enabled=1
+		AND	${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 判断是否唯一 -->
+	<select id="unique" resultType="boolean">
+		SELECT
+			COUNT(1)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member' and is_enabled=1
+		AND	${attributeName } = #{attributeValue}
+		<if test="id != null">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 查找实体对象分页 -->
+	<select id="selectPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member'
+		<if test="ew.nonEmptyOfWhere == true">
+			AND
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 通过名称查找会员 -->
+	<select id="search" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Member'
+		AND username LIKE concat('%', #{keyword}, '%')
+		<if test="excludes != null and excludes.size > 0 ">
+			AND id NOT IN
+			<foreach collection="excludes" item="exclude" open="(" separator="," close=")" >
+	        	#{exclude.id}
+	        </foreach>
+		</if>
+		<if test="count != null">
+			LIMIT 0, ${count}
+		</if>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Member">
+  		INSERT INTO users(
+			id ,
+			dtype ,
+			created_date ,
+			version ,
+			is_enabled ,
+			is_locked ,
+			last_login_date ,
+			last_login_ip ,
+			lock_date ,
+			email ,
+			encoded_password ,
+			mobile ,
+			`name` ,
+			username ,
+			attribute_value0 ,
+			attribute_value1 ,
+			attribute_value2 ,
+			attribute_value3 ,
+			attribute_value4 ,
+			attribute_value5 ,
+			attribute_value6 ,
+			attribute_value7 ,
+			attribute_value8 ,
+			attribute_value9 ,
+			avatar_url ,
+			balance ,
+			frozen_amount ,
+			phone ,
+			safe_key_expire ,
+			safe_key_value ,
+			address ,
+			birth ,
+			gender ,
+			point ,
+			zip_code ,
+			area_id ,
+			member_rank_id,
+			data_source
+		)
+		VALUES (
+			#{entity.id}, 
+			'Member', 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.isEnabled}, 
+			#{entity.isLocked}, 
+			#{entity.lastLoginDate}, 
+			#{entity.lastLoginIp}, 
+			#{entity.lockDate}, 
+			#{entity.email}, 
+			#{entity.encodedPassword}, 
+			#{entity.mobile}, 
+			#{entity.name}, 
+			#{entity.username}, 
+			#{entity.attributeValue0}, 
+			#{entity.attributeValue1}, 
+			#{entity.attributeValue2}, 
+			#{entity.attributeValue3}, 
+			#{entity.attributeValue4}, 
+			#{entity.attributeValue5}, 
+			#{entity.attributeValue6}, 
+			#{entity.attributeValue7}, 
+			#{entity.attributeValue8}, 
+			#{entity.attributeValue9}, 
+			#{entity.avatarUrl}, 
+			#{entity.balance}, 
+			#{entity.frozenAmount}, 
+			#{entity.phone}, 
+			#{entity.safeKey.expire}, 
+			#{entity.safeKey.value}, 
+			#{entity.address}, 
+			#{entity.birth}, 
+			#{entity.gender}, 
+			#{entity.point}, 
+			#{entity.zipCode}, 
+			#{entity.area.id}, 
+			#{entity.memberRank.id},
+			#{entity.dataSource}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	 <update id="update" parameterType="net.xiaoxiangshop.entity.Member">
+    	UPDATE users
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			is_enabled = #{entity.isEnabled},
+			is_locked = #{entity.isLocked},
+			last_login_date = #{entity.lastLoginDate},
+			last_login_ip = #{entity.lastLoginIp},
+			lock_date = #{entity.lockDate},
+			email = #{entity.email},
+			encoded_password = #{entity.encodedPassword},
+			mobile = #{entity.mobile},
+			`name` = #{entity.name},
+			username = #{entity.username},
+			attribute_value0 = #{entity.attributeValue0},
+			attribute_value1 = #{entity.attributeValue1},
+			attribute_value2 = #{entity.attributeValue2},
+			attribute_value3 = #{entity.attributeValue3},
+			attribute_value4 = #{entity.attributeValue4},
+			attribute_value5 = #{entity.attributeValue5},
+			attribute_value6 = #{entity.attributeValue6},
+			attribute_value7 = #{entity.attributeValue7},
+			attribute_value8 = #{entity.attributeValue8},
+			attribute_value9 = #{entity.attributeValue9},
+			avatar_url = #{entity.avatarUrl}, 
+			balance = #{entity.balance},
+			frozen_amount = #{entity.frozenAmount},
+			phone = #{entity.phone},
+			safe_key_expire = #{entity.safeKey.expire},
+			safe_key_value = #{entity.safeKey.value},
+			address = #{entity.address},
+			birth = #{entity.birth},
+			gender = #{entity.gender},
+			point = #{entity.point},
+			apoints = #{entity.apoints},
+			points = #{entity.points},
+			zip_code = #{entity.zipCode},
+			area_id = #{entity.area.id},
+			member_rank_id = #{entity.memberRank.id}
+		WHERE
+			`dtype` = 'Member'
+		AND id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  	<update id="removeMemberCard" parameterType="java.lang.String">
+		update users set attribute_value0='' where `dtype` = 'Member' and attribute_value0=#{vipCard}
+	</update>
+  	<!-- 移除 -->
+	<delete id="delete" parameterType="java.util.List">
+		DELETE FROM `users` WHERE `dtype` = 'Member' AND id IN 
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+	</delete>
+	
+	<!-- 清除会员注册项值 -->
+	<update id="clearAttributeValue">
+		UPDATE member SET ${propertyName} = null
+	</update>
+	
+	<!-- 查询总余额 -->
+	<select id="totalBalance" resultType="BigDecimal">
+		SELECT
+			IFNULL(sum(balance) , 0)
+		FROM
+			users
+		WHERE
+			dtype = 'Member'
+	</select>
+	
+	<!-- 查询冻结总额 -->
+	<select id="frozenTotalAmount" resultType="BigDecimal">
+		SELECT
+			IFNULL(sum(frozen_amount) , 0)
+		FROM
+			users
+		WHERE
+			dtype = 'Member'
+	</select>
+
+
+	<!-- 查找实体对象集合 -->
+	<select id="findMembers" resultMap="BaseResultMap" parameterType="net.xiaoxiangshop.entity.Member">
+			SELECT
+			<include refid="Base_Column_List"></include>
+			FROM
+			`users`
+			WHERE
+			`dtype` = 'Member' and is_enabled=1
+			AND  email=#{member.email}
+			and  mobile=#{member.mobile}
+	</select>
+
+
+	<!-- 查找实体对象集合 -->
+	<select id="findHistoryUser" resultMap="BaseResultMap" parameterType="net.xiaoxiangshop.entity.Member">
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM
+		`users`
+		WHERE
+		`dtype` = 'Member' and is_enabled=1
+		AND  attribute_value0=#{member.attributeValue0}
+		and  mobile=#{member.mobile}
+	</select>
+
+
+	<!-- 查找实体对象集合 -->
+	<select id="memberList" resultMap="BaseResultMap" >
+		SELECT
+		<include refid="Base_Column_List"></include>
+		FROM
+		`users`
+		WHERE
+		`dtype` = 'Member' and is_enabled=1
+		and  mobile=#{mobile}
+		ORDER BY created_date desc
+	</select>
+
+</mapper>

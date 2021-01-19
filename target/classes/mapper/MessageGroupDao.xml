@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.MessageGroupDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.MessageGroup">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <association property="user1" select="net.xiaoxiangshop.dao.UserDao.find" column="user1_id" javaType="net.xiaoxiangshop.entity.User" fetchType="lazy"/>
+        <association property="user2" select="net.xiaoxiangshop.dao.UserDao.find" column="user2_id" javaType="net.xiaoxiangshop.entity.User" fetchType="lazy"/>
+        <association property="user1MessageStatus" javaType="net.xiaoxiangshop.entity.MessageStatus">
+        	<result column="user1_message_status_is_read" property="isRead"/>
+        	<result column="user1_message_status_is_deleted" property="isDeleted"/>
+        </association>
+        <association property="user2MessageStatus" javaType="net.xiaoxiangshop.entity.MessageStatus">
+        	<result column="user2_message_status_is_read" property="isRead"/>
+        	<result column="user2_message_status_is_deleted" property="isDeleted"/>
+        </association>
+        <collection property="messages" select="net.xiaoxiangshop.dao.MessageDao.findSet" column="{attributeName=message_group_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Message" fetchType="lazy" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, user1_message_status_is_deleted, user1_message_status_is_read, user2_message_status_is_deleted, user2_message_status_is_read, user1_id, user2_id, 'message_group_id'
+    </sql>
+
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`message_group` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`message_group`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查找消息组 -->
+	<select id="findByUser" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`message_group` 
+		<where>
+			<if test="user1 != null">
+				AND (user1_id = #{user1.id} OR user2_id = #{user1.id})
+			</if>
+			<if test="user2 != null">
+				AND (user1_id = #{user2.id} OR user2_id = #{user2.id})
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查找消息分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`message_group`
+		<where>
+			<if test="user != null">
+				AND (user1_id = #{user.id} AND user1_message_status_is_deleted = false
+				OR   user2_id = #{user.id} AND user2_message_status_is_deleted = false)
+			</if>
+			<if test="ew.nonEmptyOfWhere == true">
+				AND
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.MessageGroup">
+    	INSERT INTO message_group(
+			id ,
+			created_date ,
+			version ,
+			user1_message_status_is_deleted ,
+			user1_message_status_is_read ,
+			user2_message_status_is_deleted ,
+			user2_message_status_is_read ,
+			user1_id ,
+			user2_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.user1MessageStatus.isDeleted}, 
+			#{entity.user1MessageStatus.isRead}, 
+			#{entity.user2MessageStatus.isDeleted}, 
+			#{entity.user2MessageStatus.isRead}, 
+			#{entity.user1.id}, 
+			#{entity.user2.id}
+		)
+  	</insert>
+	
+</mapper>

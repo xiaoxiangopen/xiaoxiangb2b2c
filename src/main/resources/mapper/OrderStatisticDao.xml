@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.OrderStatisticDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.OrderStatistic">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="statistic_date" property="statisticDate" />
+        <result column="day" property="day" />
+        <result column="order_num" property="orderNum" />
+        <result column="total_order_amount" property="totalOrderAmount" />
+		<result column="pc_order_num" property="pcOPrderNum" />
+		<result column="pc_order_amount" property="pcOrderAmount" />
+		<result column="applets_order_num" property="appletsOrderNum" />
+		<result column="applets_order_amount" property="appletsOrderAmount" />
+		<result column="app_order_num" property="appOrderNum" />
+		<result column="app_order_amount" property="appOrderAmount" />
+        <association property="store" select="net.xiaoxiangshop.dao.StoreDao.find" column="store_id" javaType="net.xiaoxiangshop.entity.Store" fetchType="lazy"/>
+    </resultMap>
+
+	<!-- 查询订单统计台账 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+		 id,
+		 version,
+		 created_date,
+		 statistic_date,
+		 order_num,
+		 total_order_amount,
+		 pc_order_num,
+		 pc_order_amount,
+		 applets_order_num,
+		 applets_order_amount,
+		 app_order_num,
+		 app_order_amount,
+		 store_id
+		FROM
+		order_statistic
+		WHERE 
+			1 = 1
+		<if test="store != null">
+			AND store_id = #{store.id}
+		</if>
+		<if test="beginDate != null">
+			AND statistic_date <![CDATA[ >= ]]> #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND statistic_date <![CDATA[ <= ]]> #{endDate}
+		</if>
+		ORDER BY statistic_date
+	</select>
+</mapper>

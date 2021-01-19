@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.BusinessDepositLogDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.BusinessDepositLog">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="balance" property="balance" />
+        <result column="credit" property="credit" />
+        <result column="debit" property="debit" />
+        <result column="memo" property="memo" />
+        <result column="type" property="type" />
+        <association property="business" select="net.xiaoxiangshop.dao.BusinessDao.find" column="business_id" javaType="net.xiaoxiangshop.entity.Business" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        business_deposit_log.id,
+        business_deposit_log.version,
+        business_deposit_log.created_date,business_deposit_log.last_modified_date, business_deposit_log.balance, business_deposit_log.credit, business_deposit_log.debit, business_deposit_log.memo, business_deposit_log.type, business_deposit_log.business_id
+    </sql>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`business_deposit_log`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查找实体对象分页 -->
+	<select id="selectPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`business_deposit_log`
+		<if test="ew.nonEmptyOfWhere == true">
+			WHERE
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查找商家预存款记录分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`business_deposit_log`
+		left join  `users` business  on business.id=business_deposit_log.business_id and business.dtype='Business'
+		<where>
+			<if test="business != null">
+				AND business_id = #{business.id}
+			</if>
+		  ${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 查询提现总额 -->
+	<select id="cashTotalAmount" resultType="BigDecimal">
+		SELECT
+			IFNULL(sum(debit), 0)
+		FROM
+			`business_deposit_log`
+		WHERE
+			type = 6
+		<if test="beginDate != null">
+			AND created_date <![CDATA[ >= ]]> #{beginDate}
+		</if>
+		<if test="endDate != null">
+			AND created_date <![CDATA[ <= ]]> #{endDate}
+		</if>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.BusinessDepositLog">
+   		INSERT INTO business_deposit_log(
+			id ,
+			created_date ,
+			version ,
+			balance ,
+			credit ,
+			debit ,
+			memo ,
+			`type` ,
+			business_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.balance}, 
+			#{entity.credit}, 
+			#{entity.debit}, 
+			#{entity.memo}, 
+			#{entity.type}, 
+			#{entity.business.id}
+		)
+  	</insert>
+  
+</mapper>

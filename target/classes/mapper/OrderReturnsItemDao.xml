@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.OrderReturnsItemDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.OrderReturnsItem">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="name" property="name" />
+        <result column="quantity" property="quantity" />
+        <result column="sn" property="sn" />
+        <result column="specifications" property="specifications" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.SpecificationConverter" />
+        <association property="orderReturns" select="net.xiaoxiangshop.dao.OrderReturnsDao.find" column="order_returns_id" javaType="net.xiaoxiangshop.entity.OrderReturns" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, name, quantity, sn, specifications, order_returns_id
+    </sql>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`order_returns_item`
+		WHERE 
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.OrderReturnsItem">
+   		INSERT INTO order_returns_item (
+			id ,
+			created_date ,
+			version ,
+			name ,
+			quantity ,
+			sn ,
+			order_returns_id ,
+			specifications
+		)
+		VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.name}, 
+			#{entity.quantity}, 
+			#{entity.sn}, 
+			#{entity.orderReturns.id}, 
+			#{entity.specifications, typeHandler=net.xiaoxiangshop.handlers.SpecificationConverter}
+		)
+  	</insert>
+  	
+</mapper>

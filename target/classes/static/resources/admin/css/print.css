@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+/* ---------- print ---------- */
+.print .bar {
+	padding: 10px;
+	box-shadow: 0px 0px 6px rgba(0, 0, 0, 0.1);
+	border-bottom: 1px solid #e8e8e8;
+}
+
+.print .bar .form-group {
+	margin-right: 20px;
+}
+
+.print main {
+	position: relative;
+	overflow: hidden;
+	padding: 15px 10px;
+	margin: 0px;
+}
+
+.print main p {
+	line-height: 25px;
+}
+
+@media print {
+	.print main {
+		padding: 0px;
+	}
+}

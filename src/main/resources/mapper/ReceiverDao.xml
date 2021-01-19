@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ReceiverDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Receiver">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="address" property="address" />
+        <result column="area_name" property="areaName" />
+        <result column="consignee" property="consignee" />
+        <result column="is_default" property="isDefault" />
+        <result column="phone" property="phone" />
+        <result column="zip_code" property="zipCode" />
+        <association property="area" select="net.xiaoxiangshop.dao.AreaDao.find" column="area_id" javaType="net.xiaoxiangshop.entity.Area" fetchType="lazy"/>
+        <association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, address, area_name, consignee, is_default, phone, zip_code, area_id, member_id
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`receiver` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`receiver`
+		WHERE
+			${attributeName} = #{attributeValue}
+		ORDER BY
+			is_default DESC ,
+			created_date DESC
+	</select>
+	
+	<!-- 查找默认收货地址 -->
+	<select id="findDefault" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`receiver` 
+		WHERE
+			member_id = #{member.id}
+		AND is_default = TRUE
+	</select>
+	
+	<!-- 查找收货地址 -->
+	<select id="findList" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`receiver` 
+		<where>
+			<if test="member != null">
+				AND member_id = #{member.id}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 查找收货地址分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`receiver` 
+		<where>
+			<if test="member != null">
+				AND member_id = #{member.id}
+			</if>
+			${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 清除默认 -->
+	<update id="clearDefault">
+		UPDATE receiver SET is_default = FALSE WHERE member_id = #{member.id} AND is_default = TRUE
+	</update>
+	
+	<!-- 清除默认 -->
+	<update id="clearDefaultExclude">
+		UPDATE receiver SET is_default = FALSE WHERE member_id = #{member.id} AND is_default = TRUE AND id != #{exclude.id}
+	</update>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Receiver">
+    	INSERT INTO receiver(
+			id ,
+			created_date ,
+			version ,
+			address ,
+			area_name ,
+			consignee ,
+			is_default ,
+			phone ,
+			zip_code ,
+			area_id ,
+			member_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.address}, 
+			#{entity.areaName}, 
+			#{entity.consignee}, 
+			#{entity.isDefault}, 
+			#{entity.phone}, 
+			#{entity.zipCode}, 
+			#{entity.area.id}, 
+			#{entity.member.id}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.Receiver">
+   		UPDATE receiver
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			address = #{entity.address},
+			area_name = #{entity.areaName},
+			consignee = #{entity.consignee},
+			is_default = #{entity.isDefault},
+			phone = #{entity.phone},
+			zip_code = #{entity.zipCode},
+			area_id = #{entity.area.id},
+			member_id=#{entity.member.id}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  
+</mapper>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.OrderItemDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.OrderItem">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="distribution_commission_totals" property="distributionCommissionTotals" />
+        <result column="is_delivery" property="isDelivery" />
+        <result column="name" property="name" />
+        <result column="platform_commission_totals" property="platformCommissionTotals" />
+        <result column="price" property="price" />
+        <result column="quantity" property="quantity" />
+        <result column="returned_quantity" property="returnedQuantity" />
+        <result column="shipped_quantity" property="shippedQuantity" />
+        <result column="sn" property="sn" />
+		<result column="proportion" property="proportion" />
+		<result column="counterdiscount" property="counterdiscount" />
+		<result column="totaldiscount" property="totaldiscount" />
+        <result column="specifications" property="specifications" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.SpecificationConverter" />
+        <result column="thumbnail" property="thumbnail" />
+        <result column="type" property="type" />
+        <result column="weight" property="weight" />
+        <association property="order" select="net.xiaoxiangshop.dao.OrderDao.find" column="orders" javaType="net.xiaoxiangshop.entity.Order" fetchType="lazy"/>
+        <association property="sku" select="net.xiaoxiangshop.dao.SkuDao.find" column="sku_id" javaType="net.xiaoxiangshop.entity.Sku" fetchType="lazy"/>
+        <collection property="aftersalesItems" select="net.xiaoxiangshop.dao.AftersalesItemDao.findSet" column="{attributeName=order_item_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.AftersalesItem" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, distribution_commission_totals, is_delivery, name, platform_commission_totals,
+        price, quantity, returned_quantity, shipped_quantity, sn, specifications, thumbnail, type, weight, orders, sku_id,proportion,
+        'order_item_id',
+        counterdiscount,
+        totaldiscount
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`order_item` 
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`order_item`
+		WHERE
+			${attributeName} = #{attributeValue}
+		ORDER BY
+			`type` ASC
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="saveBatch" parameterType="net.xiaoxiangshop.entity.OrderItem">
+   		INSERT INTO order_item(
+			id ,
+			created_date ,
+			version ,
+			distribution_commission_totals ,
+			is_delivery ,
+			`name` ,
+			platform_commission_totals ,
+			price ,
+			quantity ,
+			returned_quantity ,
+			shipped_quantity ,
+			sn ,
+			specifications ,
+			thumbnail ,
+			`type` ,
+			weight ,
+			orders ,
+			sku_id,
+			proportion,
+		    counterdiscount,
+		    totaldiscount
+		) VALUES 
+		<foreach collection="entitys" item="entity" index="index" separator=",">
+			(
+				#{entity.id}, 
+				#{entity.createdDate}, 
+				#{entity.version}, 
+				#{entity.distributionCommissionTotals}, 
+				#{entity.isDelivery}, 
+				#{entity.name}, 
+				#{entity.platformCommissionTotals}, 
+				#{entity.price}, 
+				#{entity.quantity}, 
+				#{entity.returnedQuantity}, 
+				#{entity.shippedQuantity}, 
+				#{entity.sn}, 
+				#{entity.specifications, typeHandler=net.xiaoxiangshop.handlers.SpecificationConverter},
+				#{entity.thumbnail}, 
+				#{entity.type}, 
+				#{entity.weight}, 
+				#{entity.order.id}, 
+				#{entity.sku.id},
+				#{entity.proportion},
+			    #{entity.counterdiscount},
+			    #{entity.totaldiscount}
+			)
+		</foreach>
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.OrderItem">
+    	UPDATE order_item
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			distribution_commission_totals = #{entity.distributionCommissionTotals},
+			is_delivery = #{entity.isDelivery},
+			`name` = #{entity.name},
+			platform_commission_totals = #{entity.platformCommissionTotals},
+			price = #{entity.price},
+			quantity = #{entity.quantity},
+			returned_quantity = #{entity.returnedQuantity},
+			shipped_quantity = #{entity.shippedQuantity},
+			sn = #{entity.sn},
+			specifications = #{entity.specifications, typeHandler=net.xiaoxiangshop.handlers.SpecificationConverter},
+			thumbnail = #{entity.thumbnail},
+			`type` = #{entity.type},
+			weight = #{entity.weight}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  
+</mapper>

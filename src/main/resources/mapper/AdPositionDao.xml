@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.AdPositionDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.AdPosition">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="description" property="description" />
+        <result column="height" property="height" />
+        <result column="name" property="name" />
+        <result column="template" property="template" />
+        <result column="width" property="width" />
+        <collection property="ads" select="net.xiaoxiangshop.dao.AdDao.findSet" column="{attributeName=ad_position_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.Ad" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, description, height, name, template, width, 'ad_position_id'
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`ad_position` 
+		WHERE 
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找所有实体对象集合 -->
+	<select id="findAll" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`ad_position` 
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.AdPosition">
+    	INSERT INTO ad_position(
+			id ,
+			created_date ,
+			version ,
+			description ,
+			height ,
+			`name` ,
+			width ,
+			`template`
+		)
+		VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.description}, 
+			#{entity.height}, 
+			#{entity.name}, 
+			#{entity.width}, 
+			#{entity.template}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.AdPosition">
+   		UPDATE ad_position
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			description = #{entity.description},
+			height = #{entity.height},
+			`name` = #{entity.name},
+			width = #{entity.width},
+			`template` = #{entity.template}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  	
+</mapper>

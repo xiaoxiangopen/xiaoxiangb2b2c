@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.AdminDao">
+	
+	<!-- User查询映射结果 -->
+    <resultMap id="UserResultMap" type="net.xiaoxiangshop.entity.User">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="is_enabled" property="isEnabled" />
+        <result column="is_locked" property="isLocked" />
+        <result column="last_login_date" property="lastLoginDate" />
+        <result column="last_login_ip" property="lastLoginIp" />
+        <result column="lock_date" property="lockDate" />
+    </resultMap>
+    
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.Admin" extends="UserResultMap">
+        <result column="username" property="username" />
+        <result column="encoded_password" property="encodedPassword" />
+        <result column="email" property="email" />
+        <result column="mobile" property="mobile" />
+        <result column="name" property="name" />
+        <result column="department" property="department" />
+        <collection property="roles" select="net.xiaoxiangshop.dao.RoleDao.findSet" column="{attributeValue=id}" ofType="net.xiaoxiangshop.entity.Role" fetchType="lazy" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        dtype, created_date, last_modified_date, is_enabled, is_locked, last_login_date, last_login_ip, lock_date, department, email, encoded_password, mobile, name, username, attribute_value0, attribute_value1, attribute_value10, attribute_value11, attribute_value12, attribute_value13, attribute_value14, attribute_value15, attribute_value16, attribute_value17, attribute_value18, attribute_value19, attribute_value2, attribute_value3, attribute_value4, attribute_value5, attribute_value6, attribute_value7, attribute_value8, attribute_value9, balance, bank_account, bank_name, frozen_amount, id_card, id_card_image, identification_number, legal_person, license_image, license_number, organization_code, organization_image, phone, safe_key_expire, safe_key_value, tax_image, address, amount, birth, gender, point, zip_code, area_id, member_rank_id
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Admin'
+		AND `id` = #{id}
+	</select>
+	
+	<!-- 根据属性查找实体对象 -->
+	<select id="findByAttribute" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Admin'
+		AND ${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		<choose>
+			<when test="attributeName == 'role_id'">
+				LEFT JOIN `users_role` usersRole ON id = usersRole.`admins_id`
+				WHERE
+					`dtype` = 'Admin'
+				AND usersRole.`roles_id` = #{attributeValue}
+			</when>
+		</choose>
+	</select>
+	
+	<!-- 查找实体对象分页 -->
+	<select id="selectPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Admin'
+		<if test="ew.nonEmptyOfWhere == true">
+			AND 
+		</if>
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 查找实体对象分页 -->
+	<select id="selectCount" resultType="int">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Admin'
+		${ew.sqlSegment}
+	</select>
+	
+	<!-- 判断是否存在 -->
+	<select id="exists" resultType="boolean">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Admin'
+		AND
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 判断是否唯一 -->
+	<select id="unique" resultType="boolean">
+		SELECT
+			count(*)
+		FROM
+			`users`
+		WHERE
+			`dtype` = 'Admin'
+		AND
+			${attributeName } = #{attributeValue}
+		<if test="id != null">
+			AND id != #{id}
+		</if>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.Admin">
+    	INSERT INTO users(
+			id ,
+			dtype ,
+			created_date ,
+			version ,
+			is_enabled ,
+			is_locked ,
+			last_login_date ,
+			last_login_ip ,
+			lock_date ,
+			department ,
+			email ,
+			encoded_password ,
+			mobile ,
+			`name` ,
+			username 
+		) VALUES (
+			#{entity.id}, 
+			'Admin', 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.isEnabled}, 
+			#{entity.isLocked}, 
+			#{entity.lastLoginDate}, 
+			#{entity.lastLoginIp}, 
+			#{entity.lockDate}, 
+			#{entity.department}, 
+			#{entity.email}, 
+			#{entity.encodedPassword}, 
+			#{entity.mobile}, 
+			#{entity.name}, 
+			#{entity.username}
+		);
+		
+		<!-- 用户角色关连表 -->
+		<if test="entity.roles != null and entity.roles.size > 0">
+			INSERT INTO `users_role` (admins_id , roles_id) VALUES
+			<foreach collection="entity.roles" item="role" index="index" separator="," close=";">
+				(#{entity.id}, #{role.id})
+			</foreach>
+		</if>
+		
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.Admin">
+    	UPDATE users
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			is_enabled = #{entity.isEnabled},
+			is_locked = #{entity.isLocked},
+			last_login_date = #{entity.lastLoginDate},
+			last_login_ip = #{entity.lastLoginIp},
+			lock_date = #{entity.lockDate},
+			department = #{entity.department},
+			email = #{entity.email},
+			encoded_password = #{entity.encodedPassword},
+			mobile = #{entity.mobile},
+			`name` = #{entity.name},
+			username = #{entity.username}
+		WHERE
+			`dtype` = 'Admin'
+		AND id = #{entity.id}
+		AND version = #{entity.version};
+		
+		<!-- 删除旧数据 -->
+		DELETE FROM `users_role` WHERE admins_id = #{entity.id};
+		
+		<!-- 文章与文章标签关连表 -->
+		<if test="entity.roles != null and entity.roles.size > 0">
+			INSERT INTO `users_role` (admins_id , roles_id) VALUES
+			<foreach collection="entity.roles" item="role" index="index" separator="," close=";">
+				(#{entity.id}, #{role.id})
+			</foreach>
+		</if>
+  	</update>
+  	
+  	<!-- 移除 -->
+	<delete id="delete" parameterType="java.util.List">
+		DELETE FROM `users_role` WHERE admins_id IN
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+		
+		DELETE FROM `users` WHERE `dtype` = 'Admin' AND id IN 
+		<foreach collection="ids" item="id" open="(" separator="," close=");">
+			#{id}
+		</foreach>
+	</delete>
+	
+</mapper>

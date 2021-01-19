@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.ProductNotifyDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.ProductNotify">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="email" property="email" />
+        <result column="has_sent" property="hasSent" />
+        <association property="member" select="net.xiaoxiangshop.dao.MemberDao.find" column="member_id" javaType="net.xiaoxiangshop.entity.Member" fetchType="lazy"/>
+        <association property="sku" select="net.xiaoxiangshop.dao.SkuDao.find" column="sku_id" javaType="net.xiaoxiangshop.entity.Sku" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        productNotify.id,
+        productNotify.version,
+        productNotify.created_date, productNotify.last_modified_date, productNotify.email, productNotify.has_sent, productNotify.member_id, productNotify.sku_id
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_notify` productNotify
+		WHERE
+			productNotify.`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_notify` productNotify
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+	
+	<!-- 判断到货通知是否存在 -->
+	<select id="exists" resultType="boolean">
+		SELECT
+			count(*)
+		FROM
+			product_notify 
+		WHERE
+			sku_id = #{sku.id}
+		AND email = #{email}
+		AND has_sent = FALSE
+	</select>
+	
+	<!-- 查找到货通知分页 -->
+	<select id="findPage" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`product_notify` productNotify
+		LEFT JOIN sku sku ON productNotify.sku_id = sku.id
+		LEFT JOIN product product ON sku.product_id = product.id
+		LEFT JOIN users member ON productNotify.member_id = member.id
+		<where>
+			<if test="store != null">
+				AND product.store_id = #{store.id}
+			</if>
+			<if test="member != null">
+				AND productNotify.member_id = #{member.id}
+			</if>
+			<if test="isMarketable != null">
+				AND product.is_marketable = #{isMarketable}
+			</if>
+			<if test="isOutOfStock != null">
+				<if test="isOutOfStock == true">
+					AND (sku.stock IS NOT NULL) 
+					AND sku.stock <![CDATA[ <= ]]> sku.allocated_stock
+				</if>
+				<if test="isOutOfStock == false">
+					AND (sku.stock IS NULL OR sku.stock <![CDATA[ > ]]> sku.allocated_stock)
+				</if>
+			</if>
+			<if test="hasSent != null">
+				AND productNotify.has_sent = #{hasSent}
+			</if>
+			<if test="ew.isEmptyOfWhere == false">
+				AND
+			</if>
+		  ${ew.sqlSegment}
+		</where>
+	</select>
+	
+	<!-- 查找商品收藏数量 -->
+	<select id="count" resultType="long">
+		SELECT
+			count(productNotify.id)
+		FROM
+			`product_notify` productNotify
+		LEFT JOIN sku sku ON productNotify.sku_id = sku.id
+		LEFT JOIN product product ON sku.product_id = product.id
+		<where>
+			<if test="member != null">
+				AND productNotify.member_id = #{member.id}
+			</if>
+			<if test="isMarketable != null">
+				AND product.is_marketable = #{isMarketable}
+			</if>
+			<if test="isOutOfStock != null">
+				<if test="isOutOfStock == true">
+					AND (sku.stock IS NOT NULL) 
+					AND sku.stock <![CDATA[ <= ]]> sku.allocated_stock
+				</if>
+				<if test="isOutOfStock == false">
+					AND (sku.stock IS NULL OR sku.stock <![CDATA[ > ]]> sku.allocated_stock)
+				</if>
+			</if>
+			<if test="hasSent != null">
+				AND productNotify.has_sent = #{hasSent}
+			</if>
+		</where>
+	</select>
+	
+	<!-- 保存 -->
+	<insert id="save" parameterType="net.xiaoxiangshop.entity.ProductNotify">
+    	INSERT INTO product_notify(
+			id ,
+			created_date ,
+			version ,
+			email ,
+			has_sent ,
+			member_id ,
+			sku_id
+		) VALUES (
+			#{entity.id}, 
+			#{entity.createdDate}, 
+			#{entity.version}, 
+			#{entity.email}, 
+			#{entity.hasSent}, 
+			#{entity.member.id}, 
+			#{entity.sku.id}
+		)
+  	</insert>
+  	
+  	<!-- 更新 -->
+  	<update id="update" parameterType="net.xiaoxiangshop.entity.ProductNotify">
+    	UPDATE product_notify
+		SET last_modified_date = #{entity.lastModifiedDate},
+			version = #{entity.version} + 1,
+			has_sent = #{entity.hasSent}
+		WHERE
+			id = #{entity.id}
+		AND version = #{entity.version}
+  	</update>
+  
+</mapper>

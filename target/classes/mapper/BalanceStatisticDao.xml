@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.BalanceStatisticDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.BalanceStatistics">
+	    <result column="id" property="id" />
+	    <result column="create_time" property="createTime" />
+        <result column="beginning" property="beginning" />
+        <result column="ending" property="ending" />
+        <result column="recharge" property="recharge" />
+        <result column="consumption" property="consumption" />
+        <result column="adjust_in" property="adjustIn" />
+        <result column="adjust_out" property="adjustOut" />
+        <result column="statistics_date" property="statisticsDate" />
+		<result column="return_money" property="returnMoney" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+		create_time,
+		beginning,
+		ending,
+		recharge,
+		consumption,
+		adjust_in,
+		adjust_out,
+		statistics_date,
+		return_money
+    </sql>
+
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findByAttribute" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`deposit_statistics`
+		WHERE
+			${attributeName} = #{attributeValue}
+	</select>
+
+
+</mapper>

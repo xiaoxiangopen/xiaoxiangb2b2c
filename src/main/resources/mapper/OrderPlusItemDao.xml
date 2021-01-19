@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="net.xiaoxiangshop.dao.OrderPlusItemDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="net.xiaoxiangshop.entity.OrderPlusItem">
+	    <result column="id" property="id" />
+	    <result column="version" property="version" />
+        <result column="created_date" property="createdDate" />
+        <result column="last_modified_date" property="lastModifiedDate" />
+        <result column="distribution_commission_totals" property="distributionCommissionTotals" />
+        <result column="is_delivery" property="isDelivery" />
+        <result column="name" property="name" />
+        <result column="platform_commission_totals" property="platformCommissionTotals" />
+        <result column="price" property="price" />
+        <result column="quantity" property="quantity" />
+        <result column="returned_quantity" property="returnedQuantity" />
+        <result column="shipped_quantity" property="shippedQuantity" />
+        <result column="sn" property="sn" />
+        <result column="specifications" property="specifications" jdbcType="LONGVARCHAR"
+				javaType="java.util.ArrayList" typeHandler="net.xiaoxiangshop.handlers.SpecificationConverter" />
+        <result column="thumbnail" property="thumbnail" />
+        <result column="type" property="type" />
+        <result column="weight" property="weight" />
+        <association property="order" select="net.xiaoxiangshop.dao.OrderPlusDao.find" column="orders" javaType="net.xiaoxiangshop.entity.OrderPlus" fetchType="lazy"/>
+        <association property="sku" select="net.xiaoxiangshop.dao.SkuDao.find" column="sku_id" javaType="net.xiaoxiangshop.entity.Sku" fetchType="lazy"/>
+        <collection property="aftersalesItems" select="net.xiaoxiangshop.dao.AftersalesItemDao.findSet" column="{attributeName=order_item_id, attributeValue=id}" ofType="net.xiaoxiangshop.entity.AftersalesItem" fetchType="lazy"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,
+        version,
+        created_date, last_modified_date, distribution_commission_totals, is_delivery, name, platform_commission_totals, price, quantity, returned_quantity, shipped_quantity, sn, specifications, thumbnail, type, weight, orders, sku_id, 'order_item_id'
+    </sql>
+	
+	<!-- 查找实体对象 -->
+	<select id="find" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`order_plus_item`
+		WHERE
+			`id` = #{id}
+	</select>
+	
+	<!-- 查找实体对象集合 -->
+	<select id="findSet" resultMap="BaseResultMap">
+		SELECT
+			<include refid="Base_Column_List"></include>
+		FROM
+			`order_plus_item`
+		WHERE
+			${attributeName} = #{attributeValue}
+		ORDER BY
+			`type` ASC
+	</select>
+	
+
+  	
+
+</mapper>

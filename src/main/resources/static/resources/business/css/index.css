@@ -1,0 +1,91 @@
+@charset "utf-8";
+
+/* ---------- index ---------- */
+.index .box:hover {
+	border-top: 1px solid #0088ed;
+}
+
+.index .store-info .logo img {
+	max-width: 100px;
+	max-height: 52px;
+	padding: 2px;
+	border: 1px solid #eeeeee;
+}
+
+.index .store-info p {
+	line-height: 26px;
+	color: #666666;
+}
+
+.index .order-info .panel-body {
+	min-height: 120px;
+	padding: 30px 20px;
+}
+
+.index .order-info .iconfont {
+	width: 60px;
+	height: 60px;
+	display: block;
+	line-height: 60px;
+	margin-right: 5px;
+	color: #ffffff;
+	font-size: 28px;
+	text-align: center;
+	-webkit-transition: opacity 0.5s;
+	transition: opacity 0.5s;
+	border-radius: 50%;
+}
+
+.index .order-info a:hover .iconfont {
+	opacity: 0.7;
+}
+
+.index .order-info p {
+	color: #9c9c9c;
+}
+
+.index .product-info .panel-body {
+	min-height: 120px;
+	padding: 45px 20px 40px 20px;
+}
+
+.index .product-info .btn {
+	position: relative;
+	margin-right: 20px;
+	color: #9c9c9c;
+}
+
+.index .product-info .btn .badge {
+	position: absolute;
+	top: -10px;
+	color: #ffffff;
+	-webkit-animation: badgeEffect 0.4s both cubic-bezier(0.12, 0.4, 0.29, 1.46);
+	animation: badgeEffect 0.4s both cubic-bezier(0.12, 0.4, 0.29, 1.46);
+	background-color: #ff6666;
+}
+
+@-webkit-keyframes badgeEffect {
+	from {
+		opacity: 0;
+		-webkit-transform: scale(0);
+		transform: scale(0);
+	}
+	to {
+		opacity: 1;
+		-webkit-transform: scale(1);
+		transform: scale(1);
+	}
+}
+
+@keyframes badgeEffect {
+	from {
+		opacity: 0;
+		-webkit-transform: scale(0);
+		transform: scale(0);
+	}
+	to {
+		opacity: 1;
+		-webkit-transform: scale(1);
+		transform: scale(1);
+	}
+}
