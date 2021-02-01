@@ -33,9 +33,12 @@ PC和H5：https://weixin.xiaoxiangai.com 测试账户：jack/123456
 #### 安装教程
 
 1. 环境准备
-• 确保您的电脑已安装JDK 1.8,Eclipse或别的开发工具；
-• 确保你的电脑上已经下载安装MySQL 5.6+
-• 安装elasticsearch-6.7.0。常见错误帮助（https://www.cnblogs.com/yijialong/p/9707238.html）：
+
+
+- • 确保您的电脑已安装JDK 1.8,Eclipse或别的开发工具；
+- • 确保你的电脑上已经下载安装MySQL 5.6+
+- • 安装elasticsearch-6.7.0。常见错误帮助（https://www.cnblogs.com/yijialong/p/9707238.html）：
+
 启动elasticsearch 报如下错误：
 [2017-05-10T10:04:50,648][WARN ][o.e.b.JNANatives         ] unable to install syscall filter: 
 java.lang.UnsupportedOperationException: seccomp unavailable: CONFIG_SECCOMP not compiled into kernel, CONFIG_SECCOMP and CONFIG_SECCOMP_FILTER are needed
@@ -45,26 +48,28 @@ bootstrap.memory_lock: false
 bootstrap.system_call_filter: false
 
 2. 运行mysql文件
-开源版本运行free_db.sql； 
-旗舰版本运行flagship_db.sql；
+
+- 开源版本运行free_db.sql； 
+- 旗舰版本运行flagship_db.sql；
+
 
 3. 使用IED打开java项目，Maven拉去需要的jar包；
-
-也可以去百度网盘下载jar包，放到自己的仓库
- 
-链接：https://pan.baidu.com/s/1pkw1ZgrYBqKRxdJv_V6Chw 
-提取码：4321 
+    也可以去百度网盘下载jar包，放到自己的仓库，链接：https://pan.baidu.com/s/1pkw1ZgrYBqKRxdJv_V6Chw；提取码：4321 
 
 3. 修改application.yml
-• 文件地址：/src/main/resources/application.yml
+
+• 文件地址：/src/main/resources/application.yml;
 • 配置当前使用的运行环境：profiles；
 • 在对应的运行环境文件中（application-test、application-dev、application-pro），配置数据库、redis、elasticsearch地址。
 
 3. 启动服务
-文件地址：/src/main/java/net/xiaoxiangshop/ApplicationB2B2C.java
-右击 -> Run As -> Java Application
+
+- 文件地址：/src/main/java/net/xiaoxiangshop/ApplicationB2B2C.java
+- 右击 -> Run As -> Java Application
+
 
 #### 使用说明
+[小象电商产品手册](https://www.yuque.com/xiaoxiangai/b2b2c/)
 
 #### 演示环境
 
