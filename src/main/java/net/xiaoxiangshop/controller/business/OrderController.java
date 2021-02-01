@@ -606,8 +606,8 @@ public class OrderController extends BaseController {
                     String method_name = payment_method.split("\\|")[1];
                     if (method_name.equals(ONLINE_CASH_CARD) || method_name.equals(CASH_CARD)) {
                         balance_pay = balance_pay.add(orderPayment.getAmount());
-                        if(payment.indexOf("网乐购")==-1){
-                            payment += "网乐购账户金额支付、";
+                        if(payment.indexOf("爱乐购")==-1){
+                            payment += "爱乐购账户金额支付、";
                         }
                     }
 

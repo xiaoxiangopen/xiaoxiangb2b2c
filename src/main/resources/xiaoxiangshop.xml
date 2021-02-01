@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xiaoxiangshop>
 	<setting name="siteName" value="小象电商--小象电商" />
-	<!--	<setting name="siteUrl" value="https://newmall.cgzfs.com/" />-->
-	<!--	<setting name="siteUrl" value="https://test003.cgzfs.com/" />-->
+	<!--	<setting name="siteUrl" value="https://weixin.xiaoxiangai.com/" />-->
 	<setting name="siteUrl" value="http://localhost:8080/" />
 	<setting name="logo" value="/resources/common/images/logo.png" />
 	<!--h5端logo-->
 	<setting name="mobilelogo" value="/upload/image/mobilelogo.png" />
 	<setting name="hotSearch" value="超市,奶粉,iphone,美的,华为,香水,时尚,苹果,婴儿,巧克力,九阳,联想,戴森,虎牌,乐高,松下,西门子" />
-	<setting name="address" value="深圳市越秀区环市东路369号" />
-	<setting name="phone" value="020-00000000" />
+	<setting name="address" value="北京市朝阳区霄云中心A座807" />
+	<setting name="phone" value="15910803970" />
 	<setting name="zipCode" value="510000" />
-	<setting name="email" value="xxx@cgzfs.com" />
+	<setting name="email" value="market@xiaoxiangai.com" />
 	<setting name="certtext" value="粤ICP备：B2-00000000" />
 	<setting name="largeProductImageWidth" value="800" />
 	<setting name="largeProductImageHeight" value="800" />
@@ -69,21 +68,21 @@
 	<setting name="taxRate" value="0" />
 	<setting name="cookiePath" value="/" />
 	<setting name="cookieDomain" value="" />
-	<setting name="kuaidi100Customer" value="6D6269F8633A1957EF1EE20A09531FAF" />
-	<setting name="kuaidi100Key" value="SrOMpYaJ3330" />
+	<setting name="kuaidi100Customer" value="xx" />
+	<setting name="kuaidi100Key" value="xxx" />
 	<setting name="isCnzzEnabled" value="false" />
 	<setting name="cnzzSiteId" value="" />
 	<setting name="cnzzPassword" value="" />
-	<setting name="smsAppId" value="SendSMS_gzyouyi" />
-	<setting name="smsSecretKey" value="gzyouyi@2017" />
-	<setting name="youyiSmsUrl" value="http://121.40.16.43" />
+	<setting name="smsAppId" value="xxx" />
+	<setting name="smsSecretKey" value="xxx" />
+	<setting name="youyiSmsUrl" value="xxx" />
 	<!--会员绑定短信相关配置-->
 	<!--会员绑定验证码短信模板-->
-	<setting name="youyiHySmsTemplate" value="验证码为:code，欢迎使用小象电商网乐购商城会员卡绑定服务。" />
+	<setting name="youyiHySmsTemplate" value="验证码为:code，欢迎使用小象电商爱乐购商城会员卡绑定服务。" />
 	<!--登陆手机验证码短信模板-->
 	<setting name="youyiLoginSmsTemplate" value="验证码为code，欢迎访问小象电商官方购物网站。" />
 	<!--修改密码手机验证码短信模板-->
-	<setting name="youyiEditPwdSmsTemplate" value="验证码为code,欢迎使用小象电商网乐购商城修改密码服务。" />
+	<setting name="youyiEditPwdSmsTemplate" value="验证码为code,欢迎使用小象电商爱乐购商城修改密码服务。" />
 
 	<!--验证码有效时间(秒)-->
 	<setting name="youyiHySmsCodeTime" value="120" />
