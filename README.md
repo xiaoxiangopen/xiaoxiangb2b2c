@@ -6,8 +6,8 @@
 
 #### 官网
 
-- 官网地址：https://www.xiaoxiangai.com
-- 技术交流QQ群：958957921
+1. 官网地址：https://www.xiaoxiangai.com
+2. 技术交流QQ群：958957921
 
 
 
@@ -83,13 +83,15 @@ bootstrap.system_call_filter: false
 
 
 #### 项目地址
-商城PC及服务端地址：https://gitee.com/xiaoxiangopen/xiaoxiangb2b2c/
-前端小程序地址：https://gitee.com/xiaoxiangopen/xiaoxiangb2b2c-weichat
+
+1. 商城PC及服务端地址：https://gitee.com/xiaoxiangopen/xiaoxiangb2b2c/
+2. 前端小程序地址：https://gitee.com/xiaoxiangopen/xiaoxiangb2b2c-weichat
+
 
 #### 用户权益
 
-- 允许免费用于学习、毕设等。
-- 代码文件需保留相关license信息。
-- 禁止直接将本项目挂淘宝等商业平台出售。
-- 禁止基于本项目直接进行商业项目和获利的相关行为。
-- 非界面代码50%以上相似度的二次开源，二次开源需先联系作者。
+1. 允许免费用于学习、毕设等。
+2. 代码文件需保留相关license信息。
+3. 禁止直接将本项目挂淘宝等商业平台出售。
+4. 禁止基于本项目直接进行商业项目和获利的相关行为。
+5. 非界面代码50%以上相似度的二次开源，二次开源需先联系作者。
