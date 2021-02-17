@@ -33,6 +33,13 @@
 10. 工具类：Apache Commons、Jackson 2.9.6、fastjson 1.2.6
 
 
+#### 技术栈
+1. 前端（PC、H5）：FreeMarker。[FreeMarker 中文官方参考手册](http://freemarker.foofun.cn/toc.html)
+2. 前端（微信小程序）：JS+CSS+HTML5
+3. 前端(APP)：uniapp。[uni-app官网](https://uniapp.dcloud.io/)
+4. 后端：java 
+
+
 #### 推荐运行环境
 1. 操作系统：Linux、Unix、Windows
 2. JDK：JDK 1.8
