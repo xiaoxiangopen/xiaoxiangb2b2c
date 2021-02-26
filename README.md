@@ -18,6 +18,8 @@
 1. PC和H5商城：https://weixin.xiaoxiangai.com 测试账户：jack/123456
 2. 商家连接：https://weixin.xiaoxiangai.com/business  测试账户：business/123456
 3. 总后台：https://weixin.xiaoxiangai.com/admin 测试账户：admin/123456
+4. 小程序商城：
+- ![输入图片说明](https://images.gitee.com/uploads/images/2021/0225/175527_375a7b51_5325125.jpeg "xiaoxiangweicha.png")
 
 
 #### 软件架构
@@ -31,6 +33,13 @@
 8. 缓存框架：Ehcache 2.6 + Redis 3.2
 9. 日志管理：SLF4J 1.7 + Log4j2 2.7
 10. 工具类：Apache Commons、Jackson 2.9.6、fastjson 1.2.6
+
+
+#### 技术栈
+1. 前端（PC、H5）：FreeMarker。[FreeMarker 中文官方参考手册](http://freemarker.foofun.cn/toc.html)
+2. 前端（微信小程序）：JS+CSS+HTML5
+3. 前端(APP)：uniapp。[uni-app官网](https://uniapp.dcloud.io/)
+4. 后端：java 
 
 
 #### 推荐运行环境
@@ -93,6 +102,14 @@ bootstrap.system_call_filter: false
 #### 软著
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0201/103942_26048a33_5325125.png "b2b2c软著.png")
 
+
+#### 2021产品计划
+1. 优化微信小程序版式设计
+2. 完善现有一级分销功能
+3. 微信小程序社交裂变
+4. 可视化大屏深度集成
+5. 基于埋点的用户行为分析、会员标签和画像
+6. 自助营销平台集成（会员圈选、活动接入、渠道推送）
 
 #### 用户权益
 
