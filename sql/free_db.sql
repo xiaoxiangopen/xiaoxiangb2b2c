@@ -3447,7 +3447,7 @@ CREATE TABLE `balance_statistics` (
   `update_time` datetime DEFAULT NULL COMMENT '更新时间',
   `return_money` decimal(30,2) DEFAULT NULL COMMENT '退款金额',
   `balance_user` decimal(30,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of balance_statistics
@@ -5392,7 +5392,7 @@ CREATE TABLE `deposit_statistics` (
   `return_money` decimal(30,2) DEFAULT NULL COMMENT '退款金额',
   `statistics_date` date DEFAULT NULL COMMENT '统计日期',
   `update_time` datetime DEFAULT NULL COMMENT '更新时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of deposit_statistics
@@ -5968,7 +5968,7 @@ CREATE TABLE `orders` (
   `shipping_method_id` bigint(20) DEFAULT NULL COMMENT '配送方式',
   `store_id` bigint(20) NOT NULL COMMENT '店铺',
   `is_export` bit(1) DEFAULT b'0' COMMENT '是否已导出',
-  `export_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '导出时间',
+  `export_date` datetime DEFAULT NULL  COMMENT '导出时间',
   `is_refund` int(11) DEFAULT '0',
   `erp_sync` varchar(50) DEFAULT NULL COMMENT '同步状态',
   `erp_sync_time` datetime DEFAULT NULL COMMENT '同步时间',
@@ -6040,7 +6040,7 @@ CREATE TABLE `orders_plus` (
   `shipping_method_id` bigint(20) DEFAULT NULL COMMENT '配送方式',
   `store_id` bigint(20) NOT NULL COMMENT '店铺',
   `is_export` bit(1) DEFAULT b'0' COMMENT '是否已导出',
-  `export_date` datetime DEFAULT CURRENT_TIMESTAMP COMMENT '导出时间',
+  `export_date` datetime DEFAULT NULL COMMENT '导出时间',
   `is_refund` int(11) DEFAULT '0',
   `erp_sync` varchar(50) DEFAULT NULL COMMENT '同步状态',
   `erp_sync_time` datetime DEFAULT NULL COMMENT '同步时间',
@@ -8818,7 +8818,7 @@ CREATE TABLE `product_note` (
   `begin_time` datetime DEFAULT NULL COMMENT '开始时间',
   `end_time` datetime DEFAULT NULL COMMENT '结束时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='商品提示信息表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品提示信息表';
 
 -- ----------------------------
 -- Records of product_note
@@ -23693,7 +23693,7 @@ CREATE TABLE `statistics_deposit_new` (
   `member_id` bigint(20) NOT NULL COMMENT '会员',
   `card_no` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
   `orders` bigint(20) DEFAULT NULL COMMENT '订单'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of statistics_deposit_new
@@ -24318,7 +24318,7 @@ CREATE TABLE `svc` (
 DROP TABLE IF EXISTS `temp_makearea`;
 CREATE TABLE `temp_makearea` (
   `id` bigint(20) NOT NULL COMMENT 'ID'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of temp_makearea
