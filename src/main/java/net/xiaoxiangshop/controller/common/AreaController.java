@@ -38,7 +38,7 @@ public class AreaController {
 		for (Area area : areas) {
 			Map<String, Object> item = new HashMap<>();
 			item.put("name", area.getName());
-			item.put("value", area.getId());
+			item.put("value", String.valueOf(area.getId()));
 			data.add(item);
 		}
 		return data;
