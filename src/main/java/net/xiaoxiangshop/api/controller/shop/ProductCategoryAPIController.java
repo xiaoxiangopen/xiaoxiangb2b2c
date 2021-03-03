@@ -54,7 +54,7 @@ public class ProductCategoryAPIController {
 					Map<String, Object> item = new HashMap<>();
 					item.put("id", String.valueOf(children.getId()));
 					item.put("name", children.getName());
-					item.put("image", setting.getSiteUrl() + setting.getDefaultThumbnailProductImage());
+					item.put("image", setting.getSiteUrl() + children.getImgUrl());
 					items.add(item);
 				}
 				category.put("childrens", items);
@@ -79,7 +79,7 @@ public class ProductCategoryAPIController {
 								Map<String, Object> item = new HashMap<>();
 								item.put("id", String.valueOf(children.getId()));
 								item.put("name", children.getName());
-								item.put("image", setting.getSiteUrl() + setting.getDefaultThumbnailProductImage());
+								item.put("image", setting.getSiteUrl() + children.getImgUrl());
 								items.add(item);
 							}
 							category.put("childrens", items);
