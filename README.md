@@ -21,6 +21,10 @@
 4. 小程序商城：
 - ![输入图片说明](https://images.gitee.com/uploads/images/2021/0225/175527_375a7b51_5325125.jpeg "xiaoxiangweicha.png")
 
+5.微信群
+
+- ![输入图片说明](https://images.gitee.com/uploads/images/2021/0304/144118_f525780d_8629837.png "微信截图_20210304143804.png")
+
 
 #### 软件架构
 1. 核心框架：Spring Boot 2.0.3.RELEASE
