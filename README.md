@@ -13,6 +13,10 @@
 4. 微信：mzv988
 - ![输入图片说明](https://images.gitee.com/uploads/images/2021/0201/105231_685d973a_5325125.png "xiaoxiangopen.png")
 
+5.微信群
+
+- ![输入图片说明](https://images.gitee.com/uploads/images/2021/0304/144118_f525780d_8629837.png "微信截图_20210304143804.png")
+
 
 #### 演示环境
 1. PC和H5商城：https://weixin.xiaoxiangai.com 测试账户：jack/123456
@@ -21,9 +25,6 @@
 4. 小程序商城：
 - ![输入图片说明](https://images.gitee.com/uploads/images/2021/0225/175527_375a7b51_5325125.jpeg "xiaoxiangweicha.png")
 
-5.微信群
-
-- ![输入图片说明](https://images.gitee.com/uploads/images/2021/0304/144118_f525780d_8629837.png "微信截图_20210304143804.png")
 
 
 #### 软件架构
