@@ -108,6 +108,9 @@ bootstrap.system_call_filter: false
 #### 软著
 ![输入图片说明](https://images.gitee.com/uploads/images/2021/0201/103942_26048a33_5325125.png "b2b2c软著.png")
 
+#### 高新技术认证
+![输入图片说明](https://images.gitee.com/uploads/images/2021/0312/141619_50fcfb45_8629837.jpeg "微信图片_20210312141445.jpg")
+
 
 #### 2021产品计划
 1. 优化微信小程序版式设计
